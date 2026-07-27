@@ -1,8 +1,8 @@
-/** 全站文案集中在这里，组件里不写死中文。禁止 emoji。 */
+/** Centralized default UI copy. */
 export const copy = {
   site: {
-    name: "喵喵墙",
-    tagline: "像素猫猫头图鉴与工坊",
+    name: "Meow Wall",
+    tagline: "Pixel Cat Head Gallery & Studio",
     footer: "Built with agent-hub mascot · Customs stay in your browser",
     repo: "GitHub",
     repoUrl: "https://github.com/zjl1985/meow-wall",
@@ -15,11 +15,11 @@ export const copy = {
   },
   hero: {
     eyebrow: "Selected work / 01",
-    title: "今日展出",
-    hint: "Space / R 换猫 · 连换 10 次触发专属游行",
-    roll: "换一只",
+    title: "On Display",
+    hint: "Press Space / R to pick a cat · 10 picks unlock a special parade",
+    roll: "Pick a Cat",
     rollCount: (count: number) => `${count} rolls`,
-    makeOne: "打开工坊",
+    makeOne: "Open Studio",
   },
   specials: {
     title: "Specials",
@@ -42,7 +42,7 @@ export const copy = {
   },
   studio: {
     title: "Studio",
-    subtitle: "调色、配饰、表情。保存后进入 Archive。",
+    subtitle: "Tune colors, accessories, and moods. Save it to the Archive.",
     name: "Name",
     namePlaceholder: "Name this cat",
     colors: "Palette",
@@ -80,10 +80,10 @@ export const copy = {
   },
   says: {
     title: "Says",
-    subtitle: "给猫一句台词，它头顶冒泡。",
+    subtitle: "Give a cat a line and it will appear in a speech bubble.",
     placeholder: "e.g. I need coffee",
     submit: "Say it",
-    presets: ["我不想上班", "再来一杯", "喵", "别摸我", "今天也很努力"],
+    presets: ["No more meetings", "One more coffee", "Meow", "No touching", "Doing my best"],
     empty: "Type something first",
     tooLong: (max: number) => `Max ${max} chars`,
     pickCat: "Another cat",

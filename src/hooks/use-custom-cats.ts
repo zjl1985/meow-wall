@@ -97,7 +97,7 @@ export function useCustomCats() {
     }) => {
       const cat: CatHead = {
         id: `custom-${crypto.randomUUID()}`,
-        label: input.label.trim() || "未命名猫",
+        label: input.label.trim() || "Untitled Cat",
         palette: input.palette,
         accessories: [...input.accessories],
         kind: "custom",

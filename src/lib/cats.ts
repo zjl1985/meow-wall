@@ -121,7 +121,7 @@ export function randomPalette(): MascotPalette {
 
 export function createEmptyDraft(): CustomCatDraft {
   return {
-    label: "我的猫",
+    label: "My Cat",
     palette: { ...DEFAULT_PALETTE },
     accessories: [],
     state: "idle",
@@ -176,8 +176,8 @@ function hslToHex(h: number, s: number, l: number): string {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-const NAME_PREFIX = ["像素", "软乎", "方块", "奶油", "闪电", "豆豆", "毛线"];
-const NAME_SUFFIX = ["喵", "团子", "罐头", "爪爪", "豆", "球", "猫"];
+const NAME_PREFIX = ["Pixel", "Soft", "Block", "Cream", "Lightning", "Bean", "Wool"];
+const NAME_SUFFIX = ["Meow", "Puff", "Tin", "Paws", "Bean", "Ball", "Cat"];
 
 function randomCatName(): string {
   const prefix = NAME_PREFIX[Math.floor(Math.random() * NAME_PREFIX.length)]!;
