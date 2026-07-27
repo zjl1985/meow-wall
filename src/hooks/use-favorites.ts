@@ -2,15 +2,13 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-import type { CatImage, FavoriteCat } from "@/lib/types";
+import { getCatHead } from "@/lib/cats";
+import type { FavoriteCat } from "@/lib/types";
 
 const STORAGE_KEY = "meow-wall:favorites";
-/** 同一标签页内的多个组件靠这个事件保持同步（storage 事件只跨标签页触发） */
 const SYNC_EVENT = "meow-wall:favorites-changed";
-
 const EMPTY: FavoriteCat[] = [];
 
-/** 缓存解析结果，保证 getSnapshot 返回稳定引用，否则 useSyncExternalStore 会死循环 */
 let cachedRaw: string | null = null;
 let cachedValue: FavoriteCat[] = EMPTY;
 
@@ -22,7 +20,7 @@ function parse(raw: string | null): FavoriteCat[] {
     return parsed.filter((item): item is FavoriteCat => {
       if (typeof item !== "object" || item === null) return false;
       const record = item as Record<string, unknown>;
-      return typeof record.id === "string" && typeof record.url === "string";
+      return typeof record.id === "string" && typeof record.label === "string";
     });
   } catch {
     return EMPTY;
@@ -58,7 +56,6 @@ function write(favorites: FavoriteCat[]): void {
 
 const noopSubscribe = () => () => {};
 
-/** 首帧必须和服务端渲染一致，所以要区分"还没水合"和"真的没有收藏" */
 function useIsHydrated(): boolean {
   return useSyncExternalStore(
     noopSubscribe,
@@ -75,19 +72,17 @@ export function useFavorites() {
   );
   const isHydrated = useIsHydrated();
 
-  const toggle = useCallback((cat: CatImage) => {
+  const toggle = useCallback((id: string) => {
+    const cat = getCatHead(id);
+    if (!cat) return false;
     const current = getSnapshot();
-    const exists = current.some((item) => item.id === cat.id);
+    const exists = current.some((item) => item.id === id);
     write(
       exists
-        ? current.filter((item) => item.id !== cat.id)
-        : [{ ...cat, addedAt: Date.now() }, ...current],
+        ? current.filter((item) => item.id !== id)
+        : [{ id: cat.id, label: cat.label, addedAt: Date.now() }, ...current],
     );
     return !exists;
-  }, []);
-
-  const remove = useCallback((id: string) => {
-    write(getSnapshot().filter((item) => item.id !== id));
   }, []);
 
   const clear = useCallback(() => {
@@ -99,5 +94,5 @@ export function useFavorites() {
     [favorites],
   );
 
-  return { favorites, isHydrated, toggle, remove, clear, has };
+  return { favorites, isHydrated, toggle, clear, has };
 }

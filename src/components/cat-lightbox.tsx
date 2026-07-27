@@ -1,83 +1,67 @@
 "use client";
 
-import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useEffect } from "react";
+import { useState } from "react";
 
+import { Mascot } from "@/components/mascot/mascot";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { CAT_VARIANTS } from "@/components/mascot/mascot-art";
+import { MASCOT_STATES, type CatHead, type MascotState } from "@/lib/cats";
 import { copy } from "@/lib/copy";
-import type { CatImage } from "@/lib/types";
 
 interface CatLightboxProps {
-  cats: CatImage[];
-  activeIndex: number | null;
+  cat: CatHead | null;
   onClose: () => void;
-  onNavigate: (index: number) => void;
 }
 
-export function CatLightbox({
-  cats,
-  activeIndex,
-  onClose,
-  onNavigate,
-}: CatLightboxProps) {
-  const step = useCallback(
-    (delta: number) => {
-      if (activeIndex === null || cats.length === 0) return;
-      const next = (activeIndex + delta + cats.length) % cats.length;
-      onNavigate(next);
-    },
-    [activeIndex, cats.length, onNavigate],
-  );
-
-  useEffect(() => {
-    if (activeIndex === null) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") step(-1);
-      if (event.key === "ArrowRight") step(1);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeIndex, step]);
-
-  const cat = activeIndex === null ? null : cats[activeIndex];
+export function CatLightbox({ cat, onClose }: CatLightboxProps) {
+  const [state, setState] = useState<MascotState>("idle");
+  const palette = cat
+    ? CAT_VARIANTS.find((variant) => variant.id === cat.id)?.palette
+    : undefined;
 
   return (
-    <Dialog open={cat !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl border-none bg-transparent p-0 shadow-none">
-        <DialogTitle className="sr-only">{copy.card.preview}</DialogTitle>
+    <Dialog
+      open={cat !== null}
+      onOpenChange={(open) => {
+        if (!open) {
+          setState("idle");
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="max-w-md border-none bg-transparent p-0 shadow-none">
+        <DialogTitle className="sr-only">
+          {cat?.label ?? copy.card.preview}
+        </DialogTitle>
         {cat && (
-          <div className="clay-surface relative aspect-square w-full overflow-hidden">
-            <Image
-              src={cat.url}
-              alt="猫猫大图"
-              fill
-              sizes="(min-width: 768px) 720px, 90vw"
-              className="object-contain"
+          <div className="clay-surface flex flex-col items-center gap-6 p-8">
+            <Mascot
+              size={220}
+              state={state}
+              palette={palette}
+              markings={cat.markings}
+              accessories={cat.accessories}
+              title={cat.label}
             />
-          </div>
-        )}
-        {cats.length > 1 && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-2">
-            <Button
-              variant="secondary"
-              size="icon"
-              aria-label="上一只"
-              onClick={() => step(-1)}
-              className="pointer-events-auto"
-            >
-              <ChevronLeft />
-            </Button>
-            <Button
-              variant="secondary"
-              size="icon"
-              aria-label="下一只"
-              onClick={() => step(1)}
-              className="pointer-events-auto"
-            >
-              <ChevronRight />
-            </Button>
+            <div className="text-center">
+              <p className="font-heading text-2xl font-extrabold">{cat.label}</p>
+              <p className="text-muted-foreground mt-1 text-sm">
+                {copy.state[state]}
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2">
+              {MASCOT_STATES.map((next) => (
+                <Button
+                  key={next}
+                  size="sm"
+                  variant={state === next ? "default" : "secondary"}
+                  onClick={() => setState(next)}
+                >
+                  {copy.state[next]}
+                </Button>
+              ))}
+            </div>
           </div>
         )}
       </DialogContent>

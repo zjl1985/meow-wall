@@ -1,13 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { Dices, Heart, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { CatParade } from "@/components/cat-parade";
+import { Mascot } from "@/components/mascot/mascot";
+import { CAT_VARIANTS } from "@/components/mascot/mascot-art";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useRandomCat } from "@/hooks/use-cats";
 import { useFavorites } from "@/hooks/use-favorites";
 import { copy } from "@/lib/copy";
@@ -17,15 +17,15 @@ import { cn } from "@/lib/utils";
 const PARADE_AT = 10;
 
 export function CatHero() {
-  const { cat, isLoading, error, roll, rollCount } = useRandomCat();
+  const { cat, state, roll, rollCount } = useRandomCat();
   const { has, toggle } = useFavorites();
   const [paradedAt, setParadedAt] = useState(0);
 
-  // 每换满 10 只猫来一次猫猫大游行；同一个整十只放一次
   const showParade =
     rollCount > 0 && rollCount % PARADE_AT === 0 && paradedAt !== rollCount;
+  const isFavorite = has(cat.id);
+  const palette = CAT_VARIANTS.find((variant) => variant.id === cat.id)?.palette;
 
-  // 空格 / R 换猫，但不抢输入框的按键
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
@@ -39,8 +39,6 @@ export function CatHero() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [roll]);
 
-  const isFavorite = cat ? has(cat.id) : false;
-
   return (
     <section className="flex flex-col items-center gap-6 py-4">
       <div className="text-center">
@@ -50,43 +48,35 @@ export function CatHero() {
         <p className="text-muted-foreground mt-2 text-sm">{copy.hero.hint}</p>
       </div>
 
-      <div className="clay-surface relative aspect-square w-full max-w-md overflow-hidden">
-        {(isLoading || !cat) && <Skeleton className="absolute inset-0" />}
-        {cat && (
-          <Image
-            key={cat.id}
-            src={cat.url}
-            alt="今天的猫"
-            fill
-            sizes="448px"
-            priority
-            className={cn(
-              "object-cover transition-opacity duration-500",
-              isLoading ? "opacity-40" : "opacity-100",
-            )}
-          />
-        )}
-        {error && (
-          <div className="text-muted-foreground absolute inset-0 flex flex-col items-center justify-center gap-2 p-6 text-center text-sm">
-            <span className="text-4xl">🙈</span>
-            {copy.error.title}
-          </div>
-        )}
+      <div className="clay-surface flex aspect-square w-full max-w-md items-center justify-center">
+        <Mascot
+          key={`${cat.id}-${state}-${rollCount}`}
+          size={260}
+          state={state}
+          palette={palette}
+          markings={cat.markings}
+          accessories={cat.accessories}
+          title={cat.label}
+          className="clay-enter"
+        />
+      </div>
+
+      <div className="text-center">
+        <p className="font-heading text-xl font-bold">{cat.label}</p>
+        <p className="text-muted-foreground text-sm">{copy.state[state]}</p>
       </div>
 
       <div className="flex items-center gap-3">
-        <Button size="lg" onClick={roll} disabled={isLoading}>
+        <Button size="lg" onClick={roll}>
           <Dices />
-          {isLoading ? copy.hero.rolling : copy.hero.roll}
+          {copy.hero.roll}
         </Button>
         <Button
           size="lg"
           variant="secondary"
-          disabled={!cat}
           aria-label={isFavorite ? copy.card.unfavorite : copy.card.favorite}
           onClick={() => {
-            if (!cat) return;
-            const added = toggle(cat);
+            const added = toggle(cat.id);
             toast(added ? copy.toast.favorited : copy.toast.unfavorited);
           }}
         >

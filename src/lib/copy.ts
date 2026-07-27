@@ -2,8 +2,8 @@
 export const copy = {
   site: {
     name: "喵喵墙",
-    tagline: "一个只做一件事的网站：让你无限刷猫猫头",
-    footer: "猫图来自 TheCatAPI 与 cataas，本站不存图，只负责让你开心",
+    tagline: "agent-hub 同款像素猫猫头，一墙全开",
+    footer: "像素猫来自 Fabel CONSULTING AI / agent-hub mascot，纯本地渲染，不拉外网猫图",
   },
   nav: {
     wall: "猫墙",
@@ -12,33 +12,29 @@ export const copy = {
   },
   hero: {
     title: "今天的猫是这只",
-    hint: "按空格或 R 也能换猫",
+    hint: "按空格或 R 也能换猫 · 还会换表情",
     roll: "换一只",
-    rolling: "正在抓猫…",
     rollCount: (count: number) => `你已经换了 ${count} 只猫`,
   },
   wall: {
     title: "猫墙",
-    subtitle: "往下滚会自动续猫",
-    loadMore: "再来一波",
-    loading: "猫猫正在赶来…",
-    end: "已经到底了，点上面的按钮继续",
+    subtitle: (total: number) => `一共 ${total} 款像素皮肤，全是 agent-hub 同款`,
+    reshuffle: "打乱一下",
   },
   card: {
     favorite: "收藏",
     unfavorite: "取消收藏",
-    download: "下载",
-    preview: "看大图",
+    preview: "看大猫",
   },
   says: {
     title: "让猫替你说话",
-    subtitle: "输入一句话，猫会帮你说出来",
+    subtitle: "选一只像素猫，输入一句话，它头顶冒泡",
     placeholder: "比如：我不想上班",
-    submit: "生成",
-    generating: "猫正在酝酿…",
+    submit: "让它说",
     presets: ["我不想上班", "再来一杯", "喵", "别摸我", "今天也很努力"],
     empty: "先输入一句话吧",
     tooLong: (max: number) => `最多 ${max} 个字`,
+    pickCat: "换一只说话的猫",
   },
   favorites: {
     title: "我的收藏",
@@ -52,16 +48,20 @@ export const copy = {
     favorited: "收下了，这只猫是你的了",
     unfavorited: "已经放它走了",
     cleared: "猫猫们都散场了",
-    downloadFailed: "下载失败，稍后再试",
-  },
-  error: {
-    title: "猫猫们暂时躲起来了",
-    retry: "再试一次",
   },
   easterEgg: {
     sound: "喵一声",
-    soundOff: "静音",
     parade: "猫猫大游行！",
     awayTitle: "🐱 快回来…",
   },
+  state: {
+    idle: "发呆",
+    thinking: "思考中",
+    success: "开心",
+    error: "懵了",
+    sleeping: "睡觉",
+    angry: "生气",
+  },
 } as const;
+
+export const MAX_SAYS_LENGTH = 24;

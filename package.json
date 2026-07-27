@@ -10,7 +10,6 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run src/lib/__tests__",
-    "test:api": "vitest run src/app/api/__tests__",
     "test:changed": "vitest run --changed",
     "test:watch": "vitest",
     "test:e2e:smoke": "playwright test"

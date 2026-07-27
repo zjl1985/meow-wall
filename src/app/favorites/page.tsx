@@ -8,10 +8,14 @@ import { CatGrid } from "@/components/cat-grid";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFavorites } from "@/hooks/use-favorites";
+import { getCatHead } from "@/lib/cats";
 import { copy } from "@/lib/copy";
 
 export default function FavoritesPage() {
   const { favorites, isHydrated, clear } = useFavorites();
+  const cats = favorites
+    .map((item) => getCatHead(item.id))
+    .filter((cat): cat is NonNullable<typeof cat> => cat !== undefined);
 
   return (
     <div className="flex flex-col gap-8 py-10">
@@ -47,7 +51,7 @@ export default function FavoritesPage() {
         </div>
       )}
 
-      {isHydrated && favorites.length === 0 && (
+      {isHydrated && cats.length === 0 && (
         <div className="clay-surface flex flex-col items-center gap-4 p-16 text-center">
           <span className="clay-wiggle text-6xl">😿</span>
           <p className="text-lg font-semibold">{copy.favorites.empty}</p>
@@ -58,7 +62,7 @@ export default function FavoritesPage() {
         </div>
       )}
 
-      {isHydrated && favorites.length > 0 && <CatGrid cats={favorites} />}
+      {isHydrated && cats.length > 0 && <CatGrid cats={cats} />}
     </div>
   );
 }
