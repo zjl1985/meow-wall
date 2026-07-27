@@ -60,19 +60,19 @@ function renderDecoration(state: MascotState, p: MascotPalette) {
     // 像素省略号，不用 emoji
     return (
       <g className="ah-cat-think">
-        <rect x="46" y="8" width="2" height="2" fill={p.ink} />
-        <rect x="51" y="6" width="2" height="2" fill={p.ink} />
-        <rect x="56" y="4" width="2" height="2" fill={p.ink} />
+        <rect x="305" y="72" width="10" height="10" fill={p.ink} />
+        <rect x="325" y="52" width="12" height="12" fill={p.ink} />
+        <rect x="348" y="30" width="14" height="14" fill={p.ink} />
       </g>
     );
   }
   if (state === "sleeping") {
     return (
       <g className="ah-cat-zzz" fill={p.headDark} fontFamily="monospace" fontWeight="900">
-        <text x="44" y="15" fontSize="8">
+        <text x="295" y="95" fontSize="32">
           z
         </text>
-        <text x="49" y="8" fontSize="11">
+        <text x="325" y="55" fontSize="44">
           Z
         </text>
       </g>
@@ -114,9 +114,10 @@ export function Mascot({
   );
   const css = cssParts.join("\n");
 
-  const bodyRects = rects.filter((r) => !r.eye && !r.accessory);
+  const bodyRects = rects.filter((r) => !r.eye && !r.accessory && !r.top);
   const eyeRects = rects.filter((r) => r.eye);
   const accessoryRects = rects.filter((r) => r.accessory);
+  const topRects = rects.filter((r) => r.top);
 
   return (
     <svg
@@ -145,6 +146,9 @@ export function Mascot({
         </g>
         {accessoryRects.map((r, i) => (
           <rect key={`a${i}`} x={r.x} y={r.y} width={r.w} height={r.h} fill={r.fill} />
+        ))}
+        {topRects.map((r, i) => (
+          <rect key={`t${i}`} x={r.x} y={r.y} width={r.w} height={r.h} fill={r.fill} />
         ))}
       </g>
       {renderDecoration(state, p)}

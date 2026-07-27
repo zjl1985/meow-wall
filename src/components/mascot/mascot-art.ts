@@ -919,6 +919,10 @@ export const CELL = 2;
 export const MASCOT_VIEWBOX_WIDTH = 386;
 export const MASCOT_VIEWBOX_HEIGHT = 288;
 const REFERENCE_CELL = 20;
+// Existing accessories/expressions were authored on a 32-cell, 64px canvas.
+// The reference head starts 20px from the left and uses 10px logical cells.
+const LEGACY_REFERENCE_X_OFFSET = 20;
+const LEGACY_REFERENCE_CELL = 10;
 
 /**
  * The approved cat head, transcribed from `public/orange-cat-reference.svg`.
@@ -1041,67 +1045,96 @@ export type MascotState =
   | "angry";
 
 interface Expression {
-  /** Finer face details replacing the idle eyes/mouth. */
+  /** Opaque base-colour patches that remove the idle features first. */
+  clear?: readonly FaceDetail[];
+  /** Reference-canvas details that draw the replacement expression. */
   details?: readonly FaceDetail[];
   /** Whether the (open) eyes should blink. */
   blink: boolean;
 }
 
-const EXPRESSION_MOUTH: readonly FaceDetail[] = [
-  { x: 29, y: 40, w: 6, h: 3, token: "N" },
-  { x: 31, y: 43, w: 2, h: 3, token: "K" },
+const EYE_CLEAR: readonly FaceDetail[] = [
+  { x: 95, y: 155, w: 50, h: 50, token: "H" },
+  { x: 240, y: 155, w: 50, h: 50, token: "H" },
+];
+
+const MUZZLE_CLEAR: readonly FaceDetail[] = [
+  { x: 145, y: 190, w: 100, h: 40, token: "L" },
+];
+
+const EXPRESSION_NOSE: readonly FaceDetail[] = [
+  { x: 175, y: 190, w: 30, h: 10, token: "N" },
+  { x: 185, y: 200, w: 10, h: 10, token: "K" },
 ];
 
 export const EXPRESSIONS: Record<MascotState, Expression> = {
   idle: { blink: true },
-  thinking: { blink: true },
+  thinking: {
+    blink: false,
+    clear: [...EYE_CLEAR, ...MUZZLE_CLEAR],
+    details: [
+      ...EXPRESSION_NOSE,
+      // Looking up/right with a small pondering mouth.
+      { x: 105, y: 165, w: 25, h: 25, token: "K", eye: true },
+      { x: 115, y: 165, w: 10, h: 10, token: "W", eye: true },
+      { x: 255, y: 175, w: 25, h: 15, token: "K", eye: true },
+      { x: 275, y: 165, w: 10, h: 10, token: "K" },
+      { x: 185, y: 212, w: 15, h: 8, token: "K" },
+    ],
+  },
   success: {
     blink: false,
+    clear: [...EYE_CLEAR, ...MUZZLE_CLEAR],
     details: [
-      ...EXPRESSION_MOUTH,
-      { x: 16, y: 34, w: 3, h: 2, token: "K", eye: true },
-      { x: 19, y: 36, w: 5, h: 2, token: "K", eye: true },
-      { x: 41, y: 36, w: 5, h: 2, token: "K", eye: true },
-      { x: 46, y: 34, w: 3, h: 2, token: "K", eye: true },
-      { x: 27, y: 47, w: 10, h: 2, token: "K" },
+      ...EXPRESSION_NOSE,
+      { x: 100, y: 180, w: 15, h: 8, token: "K", eye: true },
+      { x: 115, y: 188, w: 20, h: 8, token: "K", eye: true },
+      { x: 250, y: 188, w: 20, h: 8, token: "K", eye: true },
+      { x: 270, y: 180, w: 15, h: 8, token: "K", eye: true },
+      // A clear U-shaped smile, rather than a flat line.
+      { x: 165, y: 210, w: 10, h: 10, token: "K" },
+      { x: 205, y: 210, w: 10, h: 10, token: "K" },
+      { x: 175, y: 220, w: 30, h: 8, token: "K" },
     ],
   },
   error: {
     blink: false,
+    clear: [...EYE_CLEAR, ...MUZZLE_CLEAR],
     details: [
-      ...EXPRESSION_MOUTH,
-      { x: 16, y: 32, w: 3, h: 2, token: "K", eye: true },
-      { x: 21, y: 32, w: 3, h: 2, token: "K", eye: true },
-      { x: 18, y: 34, w: 4, h: 2, token: "K", eye: true },
-      { x: 16, y: 38, w: 3, h: 2, token: "K", eye: true },
-      { x: 21, y: 38, w: 3, h: 2, token: "K", eye: true },
-      { x: 41, y: 32, w: 3, h: 2, token: "K", eye: true },
-      { x: 46, y: 32, w: 3, h: 2, token: "K", eye: true },
-      { x: 43, y: 34, w: 4, h: 2, token: "K", eye: true },
-      { x: 41, y: 38, w: 3, h: 2, token: "K", eye: true },
-      { x: 46, y: 38, w: 3, h: 2, token: "K", eye: true },
-      { x: 28, y: 47, w: 8, h: 2, token: "K" },
+      ...EXPRESSION_NOSE,
+      { x: 100, y: 160, w: 10, h: 10, token: "K", eye: true },
+      { x: 125, y: 160, w: 10, h: 10, token: "K", eye: true },
+      { x: 110, y: 170, w: 15, h: 10, token: "K", eye: true },
+      { x: 100, y: 190, w: 10, h: 10, token: "K", eye: true },
+      { x: 125, y: 190, w: 10, h: 10, token: "K", eye: true },
+      { x: 250, y: 160, w: 10, h: 10, token: "K", eye: true },
+      { x: 275, y: 160, w: 10, h: 10, token: "K", eye: true },
+      { x: 260, y: 170, w: 15, h: 10, token: "K", eye: true },
+      { x: 250, y: 190, w: 10, h: 10, token: "K", eye: true },
+      { x: 275, y: 190, w: 10, h: 10, token: "K", eye: true },
+      // Small open “o” mouth.
+      { x: 175, y: 210, w: 30, h: 18, token: "K" },
+      { x: 183, y: 216, w: 14, h: 8, token: "L" },
     ],
   },
   sleeping: {
     blink: false,
+    clear: EYE_CLEAR,
     details: [
-      ...EXPRESSION_MOUTH,
-      { x: 16, y: 36, w: 8, h: 2, token: "K", eye: true },
-      { x: 41, y: 36, w: 8, h: 2, token: "K", eye: true },
+      { x: 100, y: 185, w: 40, h: 8, token: "K", eye: true },
+      { x: 245, y: 185, w: 40, h: 8, token: "K", eye: true },
     ],
   },
   angry: {
     blink: false,
+    clear: EYE_CLEAR,
     details: [
-      ...EXPRESSION_MOUTH,
-      { x: 15, y: 30, w: 5, h: 2, token: "K" },
-      { x: 19, y: 32, w: 5, h: 2, token: "K" },
-      { x: 41, y: 32, w: 5, h: 2, token: "K" },
-      { x: 45, y: 30, w: 5, h: 2, token: "K" },
-      { x: 17, y: 36, w: 7, h: 3, token: "K", eye: true },
-      { x: 41, y: 36, w: 7, h: 3, token: "K", eye: true },
-      { x: 28, y: 47, w: 8, h: 2, token: "K" },
+      { x: 95, y: 150, w: 25, h: 8, token: "K" },
+      { x: 120, y: 158, w: 25, h: 8, token: "K" },
+      { x: 240, y: 158, w: 25, h: 8, token: "K" },
+      { x: 265, y: 150, w: 25, h: 8, token: "K" },
+      { x: 105, y: 180, w: 35, h: 12, token: "K", eye: true },
+      { x: 245, y: 180, w: 35, h: 12, token: "K", eye: true },
     ],
   },
 };
@@ -1207,6 +1240,127 @@ export const ACCESSORIES: Record<MascotAccessory, Overlay> = {
   },
 };
 
+/**
+ * Accessory art redrawn for the approved reference canvas. The old overlays
+ * remain exported for the Studio picker, while this map is the actual render
+ * geometry so every prop lands on the new cat head cleanly.
+ */
+const REFERENCE_ACCESSORIES: Record<MascotAccessory, readonly FaceDetail[]> = {
+  sunglasses: [
+    { x: 88, y: 155, w: 62, h: 48, token: "K" },
+    { x: 235, y: 155, w: 62, h: 48, token: "K" },
+    { x: 150, y: 170, w: 85, h: 12, token: "K" },
+  ],
+  glasses: [
+    { x: 88, y: 152, w: 62, h: 8, token: "K" },
+    { x: 88, y: 152, w: 8, h: 55, token: "K" },
+    { x: 88, y: 199, w: 62, h: 8, token: "K" },
+    { x: 142, y: 152, w: 8, h: 55, token: "K" },
+    { x: 235, y: 152, w: 62, h: 8, token: "K" },
+    { x: 235, y: 152, w: 8, h: 55, token: "K" },
+    { x: 235, y: 199, w: 62, h: 8, token: "K" },
+    { x: 289, y: 152, w: 8, h: 55, token: "K" },
+    { x: 150, y: 172, w: 85, h: 8, token: "K" },
+  ],
+  bowtie: [
+    { x: 155, y: 250, w: 25, h: 10, token: "K" },
+    { x: 205, y: 250, w: 25, h: 10, token: "K" },
+    { x: 165, y: 260, w: 55, h: 10, token: "K" },
+    { x: 180, y: 250, w: 25, h: 20, token: "M" },
+  ],
+  headphones: [
+    { x: 55, y: 75, w: 10, h: 105, token: "K" },
+    { x: 320, y: 75, w: 10, h: 105, token: "K" },
+    { x: 55, y: 70, w: 20, h: 10, token: "K" },
+    { x: 310, y: 70, w: 20, h: 10, token: "K" },
+    { x: 45, y: 165, w: 20, h: 35, token: "M" },
+    { x: 320, y: 165, w: 20, h: 35, token: "M" },
+  ],
+  crown: [
+    { x: 150, y: 10, w: 10, h: 45, token: "K" },
+    { x: 190, y: 5, w: 10, h: 50, token: "K" },
+    { x: 230, y: 10, w: 10, h: 45, token: "K" },
+    { x: 145, y: 45, w: 100, h: 15, token: "M" },
+  ],
+  scarf: [
+    { x: 110, y: 238, w: 170, h: 15, token: "M" },
+    { x: 125, y: 253, w: 140, h: 15, token: "M" },
+    { x: 205, y: 268, w: 30, h: 12, token: "M" },
+  ],
+  flower: [
+    { x: 55, y: 65, w: 20, h: 20, token: "B" },
+    { x: 75, y: 45, w: 20, h: 20, token: "B" },
+    { x: 95, y: 65, w: 20, h: 20, token: "B" },
+    { x: 75, y: 85, w: 20, h: 20, token: "B" },
+    { x: 75, y: 65, w: 20, h: 20, token: "M" },
+  ],
+  cap: [
+    { x: 105, y: 55, w: 175, h: 15, token: "K" },
+    { x: 120, y: 35, w: 145, h: 20, token: "D" },
+    { x: 140, y: 20, w: 105, h: 15, token: "D" },
+    { x: 235, y: 65, w: 80, h: 15, token: "K" },
+  ],
+  headband: [
+    { x: 85, y: 118, w: 215, h: 12, token: "K" },
+    { x: 95, y: 130, w: 195, h: 15, token: "M" },
+    { x: 85, y: 145, w: 215, h: 12, token: "K" },
+  ],
+  leaf: [
+    { x: 280, y: 35, w: 15, h: 15, token: "K" },
+    { x: 295, y: 20, w: 20, h: 20, token: "M" },
+    { x: 315, y: 35, w: 15, h: 15, token: "M" },
+    { x: 295, y: 50, w: 15, h: 20, token: "M" },
+  ],
+  "gold-chain": [
+    { x: 145, y: 245, w: 15, h: 12, token: "M" },
+    { x: 170, y: 255, w: 15, h: 12, token: "M" },
+    { x: 195, y: 245, w: 15, h: 12, token: "M" },
+    { x: 220, y: 255, w: 15, h: 12, token: "M" },
+  ],
+};
+
+/** State cues placed over opaque sunglasses; the lenses remain fully solid. */
+const SUNGLASSES_STATE_MARKERS: Record<MascotState, readonly FaceDetail[]> = {
+  idle: [
+    { x: 98, y: 165, w: 14, h: 10, token: "W" },
+    { x: 245, y: 165, w: 14, h: 10, token: "W" },
+  ],
+  thinking: [
+    { x: 118, y: 162, w: 14, h: 10, token: "W" },
+    { x: 255, y: 170, w: 14, h: 10, token: "W" },
+  ],
+  success: [
+    { x: 102, y: 184, w: 28, h: 8, token: "W" },
+    { x: 112, y: 176, w: 12, h: 8, token: "W" },
+    { x: 255, y: 176, w: 12, h: 8, token: "W" },
+    { x: 267, y: 184, w: 28, h: 8, token: "W" },
+  ],
+  error: [
+    { x: 105, y: 165, w: 12, h: 10, token: "W" },
+    { x: 121, y: 175, w: 12, h: 10, token: "W" },
+    { x: 105, y: 185, w: 12, h: 10, token: "W" },
+    { x: 121, y: 165, w: 12, h: 10, token: "W" },
+    { x: 105, y: 175, w: 12, h: 10, token: "W" },
+    { x: 121, y: 185, w: 12, h: 10, token: "W" },
+    { x: 250, y: 165, w: 12, h: 10, token: "W" },
+    { x: 266, y: 175, w: 12, h: 10, token: "W" },
+    { x: 250, y: 185, w: 12, h: 10, token: "W" },
+    { x: 266, y: 165, w: 12, h: 10, token: "W" },
+    { x: 250, y: 175, w: 12, h: 10, token: "W" },
+    { x: 266, y: 185, w: 12, h: 10, token: "W" },
+  ],
+  sleeping: [
+    { x: 102, y: 184, w: 32, h: 8, token: "L" },
+    { x: 250, y: 184, w: 32, h: 8, token: "L" },
+  ],
+  angry: [
+    { x: 102, y: 165, w: 30, h: 8, token: "W" },
+    { x: 112, y: 173, w: 25, h: 8, token: "W" },
+    { x: 250, y: 173, w: 25, h: 8, token: "W" },
+    { x: 260, y: 165, w: 30, h: 8, token: "W" },
+  ],
+};
+
 // ---------------------------------------------------------------------------
 // Rendering
 // ---------------------------------------------------------------------------
@@ -1221,6 +1375,8 @@ export interface MascotRect {
   eye: boolean;
   /** Accessory layer — painted on top. */
   accessory: boolean;
+  /** Expression marker drawn above an opaque eye accessory (e.g. sunglasses). */
+  top?: boolean;
 }
 
 export interface BuildOptions {
@@ -1282,7 +1438,6 @@ export function buildRects(
   }
 
   const grid: string[][] = CAT_GRID.map((row) => row.split(""));
-  const accGrid: string[][] = grid.map((row) => row.map(() => "."));
 
   // Skin markings sit beneath the expression / eyes.
   if (markings) {
@@ -1299,10 +1454,6 @@ export function buildRects(
 
   const expr = EXPRESSIONS[state];
 
-  for (const acc of accessories) {
-    applyOverlay(accGrid, ACCESSORIES[acc]);
-  }
-
   // Breed markings retain their existing 32×32 authoring format. Project them
   // onto the reference canvas, but only emit cells changed by the overlay.
   for (let y = 0; y < GRID_SIZE; y += 1) {
@@ -1310,10 +1461,10 @@ export function buildRects(
       const token = grid[y][x];
       if (token === CAT_GRID[y][x] || !isPixelToken(token)) continue;
       rects.push({
-        x: (x / GRID_SIZE) * MASCOT_VIEWBOX_WIDTH,
-        y: (y / GRID_SIZE) * MASCOT_VIEWBOX_HEIGHT,
-        w: MASCOT_VIEWBOX_WIDTH / GRID_SIZE,
-        h: MASCOT_VIEWBOX_HEIGHT / GRID_SIZE,
+        x: LEGACY_REFERENCE_X_OFFSET + x * LEGACY_REFERENCE_CELL,
+        y: y * LEGACY_REFERENCE_CELL,
+        w: LEGACY_REFERENCE_CELL,
+        h: LEGACY_REFERENCE_CELL,
         fill: tokenColor(token, palette),
         eye: false,
         accessory: false,
@@ -1335,23 +1486,21 @@ export function buildRects(
     });
   }
 
-  // Non-idle states replace only the expressive parts of the common face.
-  // Details were authored in the legacy 64px coordinate system, so project
-  // them into the reference canvas here.
+  // Non-idle states replace the common face. Only opaque sunglasses hide eye
+  // pixels; transparent glasses keep the full eye expression visible.
   if (expr.details) {
-    for (const clear of [
-      { x: 95, y: 155, w: 50, h: 50, token: "H" as PixelToken },
-      { x: 240, y: 155, w: 50, h: 50, token: "H" as PixelToken },
-      { x: 145, y: 190, w: 100, h: 40, token: "L" as PixelToken },
-    ]) {
+    const hasOpaqueEyeWear = accessories.includes("sunglasses");
+    for (const clear of expr.clear ?? []) {
+      if (hasOpaqueEyeWear && clear !== MUZZLE_CLEAR[0]) continue;
       rects.push({ ...clear, fill: tokenColor(clear.token, palette), eye: false, accessory: false });
     }
     for (const detail of expr.details) {
+      if (hasOpaqueEyeWear && detail.eye) continue;
       rects.push({
-        x: (detail.x / 64) * MASCOT_VIEWBOX_WIDTH,
-        y: (detail.y / 64) * MASCOT_VIEWBOX_HEIGHT,
-        w: (detail.w / 64) * MASCOT_VIEWBOX_WIDTH,
-        h: (detail.h / 64) * MASCOT_VIEWBOX_HEIGHT,
+        x: detail.x,
+        y: detail.y,
+        w: detail.w,
+        h: detail.h,
         fill: tokenColor(detail.token, palette),
         eye: detail.eye ?? false,
         accessory: false,
@@ -1359,38 +1508,35 @@ export function buildRects(
     }
   }
 
-  // Accessory overlays also retain their simple 32×32 authoring grid.
-  for (let y = 0; y < GRID_SIZE; y += 1) {
-    let runStart = -1;
-    let runToken: PixelToken | null = null;
-
-    const flush = (endX: number) => {
-      if (runStart < 0 || runToken === null) return;
+  for (const accessory of accessories) {
+    for (const detail of REFERENCE_ACCESSORIES[accessory]) {
       rects.push({
-        x: (runStart / GRID_SIZE) * MASCOT_VIEWBOX_WIDTH,
-        y: (y / GRID_SIZE) * MASCOT_VIEWBOX_HEIGHT,
-        w: ((endX - runStart) / GRID_SIZE) * MASCOT_VIEWBOX_WIDTH,
-        h: MASCOT_VIEWBOX_HEIGHT / GRID_SIZE,
-        fill: tokenColor(runToken, palette),
+        x: detail.x,
+        y: detail.y,
+        w: detail.w,
+        h: detail.h,
+        fill: tokenColor(detail.token, palette),
         eye: false,
         accessory: true,
       });
-      runStart = -1;
-      runToken = null;
-    };
-
-    for (let x = 0; x < GRID_SIZE; x += 1) {
-      const ch = accGrid[y][x];
-      if (isPixelToken(ch)) {
-        if (runToken === ch) continue;
-        flush(x);
-        runStart = x;
-        runToken = ch;
-      } else {
-        flush(x);
-      }
     }
-    flush(GRID_SIZE);
+  }
+
+  // Opaque sunglasses get state-specific marks after the accessory layer;
+  // this preserves solid lenses without making Sleep/Happy/Oops look idle.
+  if (accessories.includes("sunglasses")) {
+    for (const detail of SUNGLASSES_STATE_MARKERS[state]) {
+      rects.push({
+        x: detail.x,
+        y: detail.y,
+        w: detail.w,
+        h: detail.h,
+        fill: tokenColor(detail.token, palette),
+        eye: false,
+        accessory: false,
+        top: true,
+      });
+    }
   }
 
   return rects;
