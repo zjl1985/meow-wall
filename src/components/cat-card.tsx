@@ -44,7 +44,6 @@ export function CatCard({
             isLoaded ? "opacity-100" : "opacity-0",
           )}
           onLoad={() => setIsLoaded(true)}
-          unoptimized
         />
       </PressArea>
 

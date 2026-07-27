@@ -10,6 +10,9 @@ export const MIN_COUNT = 1;
 export const MAX_COUNT = 24;
 export const MAX_SAYS_LENGTH = 40;
 
+/** Serverless 函数最多跑 10s，上游卡住必须自己先断掉，否则整个请求变 504 */
+const UPSTREAM_TIMEOUT_MS = 6_000;
+
 export class CatSourceError extends Error {
   constructor(message: string) {
     super(message);
@@ -42,6 +45,7 @@ function toCatImage(raw: unknown): CatImage | null {
 async function fetchFromTheCatApi(count: number): Promise<CatImage[]> {
   const response = await fetch(`${THE_CAT_API}?limit=${count}`, {
     cache: "no-store",
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new CatSourceError(`thecatapi responded ${response.status}`);
@@ -54,7 +58,10 @@ async function fetchFromTheCatApi(count: number): Promise<CatImage[]> {
 }
 
 async function fetchOneFromCataas(): Promise<CatImage> {
-  const response = await fetch(`${CATAAS}/cat?json=true`, { cache: "no-store" });
+  const response = await fetch(`${CATAAS}/cat?json=true`, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+  });
   if (!response.ok) {
     throw new CatSourceError(`cataas responded ${response.status}`);
   }

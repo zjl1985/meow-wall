@@ -44,6 +44,14 @@ describe("GET /api/cats", () => {
     if (payload.success) expect(payload.data).toHaveLength(12);
   });
 
+  it("带 no-store，避免 CDN 把随机结果缓存住", async () => {
+    stubCats(1);
+
+    const response = await listCats(request("/api/cats?count=1"));
+
+    expect(response.headers.get("cache-control")).toBe("no-store");
+  });
+
   it("count 超出范围返回 400", async () => {
     const tooMany = await listCats(request("/api/cats?count=99"));
     const zero = await listCats(request("/api/cats?count=0"));

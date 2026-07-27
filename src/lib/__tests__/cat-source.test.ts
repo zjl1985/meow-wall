@@ -13,10 +13,11 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+/** handler 里 throw 会变成 fetch 的 rejected promise，和真实网络错误一致 */
 function mockFetch(handler: (url: string) => Response | Promise<Response>) {
-  const spy = vi.fn((input: string | URL | Request) => {
+  const spy = vi.fn(async (input: string | URL | Request) => {
     const url = typeof input === "string" ? input : input.toString();
-    return Promise.resolve(handler(url));
+    return handler(url);
   });
   vi.stubGlobal("fetch", spy);
   return spy;
@@ -80,6 +81,19 @@ describe("fetchRandomCats", () => {
     const cats = await fetchRandomCats(3);
 
     expect(cats).toHaveLength(3);
+  });
+
+  it("主源超时时降级到兜底源", async () => {
+    mockFetch((url) => {
+      if (url.includes("thecatapi")) {
+        throw new DOMException("The operation was aborted", "TimeoutError");
+      }
+      return jsonResponse({ _id: `fallback-${Math.random()}` });
+    });
+
+    const cats = await fetchRandomCats(2);
+
+    expect(cats).toHaveLength(2);
   });
 
   it("两个源都失败时抛 CatSourceError", async () => {

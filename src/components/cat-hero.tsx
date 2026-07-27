@@ -64,7 +64,6 @@ export function CatHero() {
               "object-cover transition-opacity duration-500",
               isLoading ? "opacity-40" : "opacity-100",
             )}
-            unoptimized
           />
         )}
         {error && (

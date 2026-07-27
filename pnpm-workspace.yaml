@@ -1,3 +1,8 @@
+# allowBuilds 是 pnpm 11 的键，onlyBuiltDependencies 是 pnpm 10 的旧键。
+# 本地用 pnpm 11，Vercel 按 lockfileVersion 9.0 选 pnpm 10，所以两个都要留。
 allowBuilds:
   sharp: true
   unrs-resolver: true
+onlyBuiltDependencies:
+  - sharp
+  - unrs-resolver

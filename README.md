@@ -17,6 +17,23 @@ Next.js 16 App Router · React 19 · TypeScript strict · Tailwind v4 · shadcn/
 所有外部请求走本地 Route Handler 代理（`/api/cats`、`/api/cats/says`、`/api/cats/download`），
 主源失败会自动降级到备用源，下载代理只放行白名单域名。
 
+## 部署到 Vercel
+
+不需要任何环境变量，也没有数据库，导入仓库点 Deploy 就能上线。
+
+```bash
+# 命令行部署
+npx vercel        # 预览环境
+npx vercel --prod # 生产环境
+```
+
+Vercel 上会自动识别 Next.js，构建命令和安装命令都用默认值即可。几个已经处理好的点：
+
+- **图片不走 Vercel 图片优化**（`images.unoptimized`）：猫图是无限流的随机图，每张都算一次转换，开优化会立刻打满免费额度
+- **`/api/cats` 强制动态 + `no-store`**：否则 CDN 会把某一批随机猫缓存给所有人
+- **上游请求 6 秒超时**：Hobby 版函数上限 10 秒，猫图源卡住时自己先断，降级到备用源而不是等到 504
+- **`pnpm-workspace.yaml` 同时写了 `allowBuilds` 和 `onlyBuiltDependencies`**：本地 pnpm 11 认前者，Vercel 按 `lockfileVersion: 9.0` 选 pnpm 10 认后者
+
 ## 开发
 
 ```bash

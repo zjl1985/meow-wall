@@ -55,7 +55,6 @@ export function CatLightbox({
               fill
               sizes="(min-width: 768px) 720px, 90vw"
               className="object-contain"
-              unoptimized
             />
           </div>
         )}

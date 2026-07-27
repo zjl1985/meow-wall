@@ -11,6 +11,9 @@ const querySchema = z.object({
   count: z.coerce.number().int().min(MIN_COUNT).max(MAX_COUNT).default(12),
 });
 
+/** 随机接口一旦被 CDN 缓存住，所有人就会看到同一批猫 */
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const parsed = querySchema.safeParse({
@@ -30,7 +33,10 @@ export async function GET(request: Request) {
 
   try {
     const cats = await fetchRandomCats(parsed.data.count);
-    return Response.json({ data: cats, success: true });
+    return Response.json(
+      { data: cats, success: true },
+      { headers: { "cache-control": "no-store" } },
+    );
   } catch (error) {
     if (error instanceof CatSourceError) {
       return Response.json(

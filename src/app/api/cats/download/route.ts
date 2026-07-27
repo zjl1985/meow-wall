@@ -30,7 +30,10 @@ export async function GET(request: Request) {
   }
 
   try {
-    const upstream = await fetch(parsed.data.url, { cache: "no-store" });
+    const upstream = await fetch(parsed.data.url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(8_000),
+    });
     if (!upstream.ok || !upstream.body) {
       return Response.json(
         { error: "取图失败", code: "UPSTREAM_ERROR", success: false },

@@ -128,7 +128,6 @@ export default function SaysPage() {
               fill
               sizes="576px"
               className="object-cover"
-              unoptimized
             />
           </div>
         )}
