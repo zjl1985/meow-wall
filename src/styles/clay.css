@@ -1,0 +1,102 @@
+/* 粘土风视觉层：暖色渐变底 + 厚实阴影 + 弹跳动效 */
+
+@layer base {
+  body {
+    background:
+      radial-gradient(
+        60rem 40rem at 10% -10%,
+        oklch(0.94 0.07 60 / 0.9),
+        transparent 70%
+      ),
+      radial-gradient(
+        50rem 36rem at 100% 0%,
+        oklch(0.93 0.06 20 / 0.8),
+        transparent 70%
+      ),
+      linear-gradient(180deg, oklch(0.99 0.02 80), oklch(0.96 0.04 60));
+    background-attachment: fixed;
+  }
+}
+
+@utility clay-surface {
+  background-color: var(--color-card);
+  border-radius: var(--radius-3xl);
+  box-shadow:
+    0 10px 0 -2px oklch(0.75 0.09 55 / 0.18),
+    0 18px 40px -12px oklch(0.5 0.08 45 / 0.35),
+    inset 0 2px 0 oklch(1 0 0 / 0.9);
+}
+
+@utility clay-pop {
+  transition:
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 260ms ease;
+
+  &:hover {
+    transform: translateY(-6px) rotate(-1.5deg);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.97);
+  }
+}
+
+@utility clay-text-shadow {
+  text-shadow: 0 3px 0 oklch(0.85 0.08 55 / 0.55);
+}
+
+@keyframes clay-float-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@utility clay-enter {
+  animation: clay-float-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes clay-parade {
+  from {
+    transform: translateX(-12vw);
+  }
+  to {
+    transform: translateX(112vw);
+  }
+}
+
+@utility clay-parade {
+  animation: clay-parade 4s linear forwards;
+}
+
+@keyframes clay-wiggle {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+@utility clay-wiggle {
+  animation: clay-wiggle 600ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clay-pop,
+  .clay-enter,
+  .clay-parade,
+  .clay-wiggle {
+    animation: none;
+    transition: none;
+  }
+
+  .clay-pop:hover {
+    transform: none;
+  }
+}
