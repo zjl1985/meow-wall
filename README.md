@@ -19,11 +19,21 @@ Next.js 16 App Router · React 19 · TypeScript strict · Tailwind v4 · shadcn/
 
 ## 部署到 Vercel
 
-不需要任何环境变量，也没有数据库，导入仓库点 Deploy 就能上线。
+通过 **GitHub → Vercel** 自动部署，不需要本地 `vercel --prod`。
+
+- 仓库：https://github.com/zjl1985/meow-wall
+- 生产域名：https://meow-wall.vercel.app
+- 生产分支：`main`（push 即触发 Production）
+- 不需要任何环境变量，也没有数据库
 
 ```bash
-# 本机若开了 7897 代理，跑 vercel CLI 前先清掉代理变量（CLI 对 ALL_PROXY 有 bug）
-env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx vercel --prod
+git push origin main   # 自动部署
+```
+
+本机若开了 7897 代理，偶尔用 CLI 查部署状态时先清掉代理变量（CLI 对 `ALL_PROXY` 有 bug）：
+
+```bash
+env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx vercel ls
 ```
 
 ## 开发
