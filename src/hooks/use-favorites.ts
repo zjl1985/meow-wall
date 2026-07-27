@@ -2,7 +2,8 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-import { getCatHead } from "@/lib/cats";
+import { getBuiltinCat } from "@/lib/cats";
+import { readCustomCats } from "@/hooks/use-custom-cats";
 import type { FavoriteCat } from "@/lib/types";
 
 const STORAGE_KEY = "meow-wall:favorites";
@@ -72,15 +73,18 @@ export function useFavorites() {
   );
   const isHydrated = useIsHydrated();
 
-  const toggle = useCallback((id: string) => {
-    const cat = getCatHead(id);
-    if (!cat) return false;
+  const toggle = useCallback((id: string, label?: string) => {
+    const builtin = getBuiltinCat(id);
+    const custom = readCustomCats().find((cat) => cat.id === id);
+    const resolvedLabel = label ?? builtin?.label ?? custom?.label;
+    if (!resolvedLabel) return false;
+
     const current = getSnapshot();
     const exists = current.some((item) => item.id === id);
     write(
       exists
         ? current.filter((item) => item.id !== id)
-        : [{ id: cat.id, label: cat.label, addedAt: Date.now() }, ...current],
+        : [{ id, label: resolvedLabel, addedAt: Date.now() }, ...current],
     );
     return !exists;
   }, []);

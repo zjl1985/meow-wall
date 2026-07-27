@@ -2,20 +2,29 @@
 
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
 import { CatGrid } from "@/components/cat-grid";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCustomCats } from "@/hooks/use-custom-cats";
 import { useFavorites } from "@/hooks/use-favorites";
-import { getCatHead } from "@/lib/cats";
+import { getBuiltinCat } from "@/lib/cats";
 import { copy } from "@/lib/copy";
 
 export default function FavoritesPage() {
   const { favorites, isHydrated, clear } = useFavorites();
-  const cats = favorites
-    .map((item) => getCatHead(item.id))
-    .filter((cat): cat is NonNullable<typeof cat> => cat !== undefined);
+  const { customs } = useCustomCats();
+
+  const cats = useMemo(() => {
+    return favorites.flatMap((item) => {
+      const builtin = getBuiltinCat(item.id);
+      if (builtin) return [builtin];
+      const custom = customs.find((cat) => cat.id === item.id);
+      return custom ? [custom] : [];
+    });
+  }, [favorites, customs]);
 
   return (
     <div className="flex flex-col gap-8 py-10">
@@ -58,7 +67,15 @@ export default function FavoritesPage() {
           <p className="text-muted-foreground text-sm">
             {copy.favorites.emptyHint}
           </p>
-          <Button render={<Link href="/" />}>{copy.favorites.goWall}</Button>
+          <div className="flex gap-3">
+            <Button render={<Link href="/" />}>{copy.favorites.goWall}</Button>
+            <Button
+              variant="secondary"
+              render={<Link href="/studio" />}
+            >
+              {copy.favorites.goStudio}
+            </Button>
+          </div>
         </div>
       )}
 

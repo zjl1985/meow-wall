@@ -1,60 +1,67 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  getCatHead,
-  listCatHeads,
+  createRandomDraft,
+  getBuiltinCat,
+  listBuiltinCats,
+  listSpecialCats,
+  listWallCats,
   pickRandomCat,
-  pickRandomState,
+  randomPalette,
   shuffleCats,
 } from "@/lib/cats";
 
-describe("listCatHeads", () => {
-  it("至少有 default 和一批皮肤", () => {
-    const cats = listCatHeads();
+describe("builtin / special cats", () => {
+  it("内置猫数量充足且 id 唯一", () => {
+    const cats = listBuiltinCats();
     expect(cats.length).toBeGreaterThanOrEqual(20);
-    expect(cats.some((cat) => cat.id === "default")).toBe(true);
-    expect(cats.every((cat) => cat.id && cat.label)).toBe(true);
+    expect(new Set(cats.map((cat) => cat.id)).size).toBe(cats.length);
   });
 
-  it("皮肤 id 不重复", () => {
-    const cats = listCatHeads();
-    expect(new Set(cats.map((cat) => cat.id)).size).toBe(cats.length);
+  it("彩蛋专属猫 Nicole/Goodman/Simon/Zero 都在", () => {
+    const ids = listSpecialCats().map((cat) => cat.id);
+    expect(ids).toEqual(["nicole", "goodman", "simon", "zero"]);
+    expect(listSpecialCats().every((cat) => cat.kind === "special")).toBe(true);
+  });
+
+  it("墙面顺序：自定义在前，不含彩蛋专属（专属另有专区）", () => {
+    const custom = {
+      id: "custom-1",
+      label: "自制",
+      palette: randomPalette(),
+      kind: "custom" as const,
+    };
+    const wall = listWallCats([custom]);
+    expect(wall[0]?.id).toBe("custom-1");
+    expect(wall.some((cat) => cat.id === "nicole")).toBe(false);
   });
 });
 
-describe("getCatHead / pickRandomCat", () => {
-  it("能按 id 取到猫", () => {
-    expect(getCatHead("orange")?.label).toBeTruthy();
-    expect(getCatHead("nope")).toBeUndefined();
+describe("generator helpers", () => {
+  it("随机草稿带 hex 配色", () => {
+    const draft = createRandomDraft();
+    expect(draft.palette.head).toMatch(/^#[0-9a-fA-F]{6}$/);
+    expect(draft.label.length).toBeGreaterThan(0);
   });
 
   it("随机猫可以排除指定 id", () => {
+    const pool = listBuiltinCats();
     for (let index = 0; index < 20; index += 1) {
-      expect(pickRandomCat("default").id).not.toBe("default");
+      expect(pickRandomCat(pool, "default").id).not.toBe("default");
     }
   });
 
-  it("随机表情落在已知集合里", () => {
-    for (let index = 0; index < 20; index += 1) {
-      expect([
-        "idle",
-        "thinking",
-        "success",
-        "error",
-        "sleeping",
-        "angry",
-      ]).toContain(pickRandomState());
-    }
-  });
-});
-
-describe("shuffleCats", () => {
-  it("打乱后元素集合不变", () => {
-    const cats = listCatHeads();
+  it("打乱后集合不变", () => {
+    const cats = listBuiltinCats();
     const shuffled = shuffleCats(cats);
-    expect(shuffled).toHaveLength(cats.length);
     expect(new Set(shuffled.map((cat) => cat.id))).toEqual(
       new Set(cats.map((cat) => cat.id)),
     );
+  });
+
+  it("能按 id 取到内置猫", () => {
+    expect(getBuiltinCat("orange")?.kind).toBe("builtin");
+    expect(getBuiltinCat("zero")?.kind).toBe("special");
+    expect(getBuiltinCat("nope")).toBeUndefined();
   });
 });

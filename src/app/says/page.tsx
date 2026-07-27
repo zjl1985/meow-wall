@@ -1,28 +1,37 @@
 "use client";
 
 import { Heart, MessageCircle, Shuffle } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { CatStage } from "@/components/cat-stage";
 import { Mascot } from "@/components/mascot/mascot";
-import { CAT_VARIANTS } from "@/components/mascot/mascot-art";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { pickRandomCat, type CatHead } from "@/lib/cats";
-import { MAX_SAYS_LENGTH, copy } from "@/lib/copy";
+import { useCustomCats } from "@/hooks/use-custom-cats";
 import { useFavorites } from "@/hooks/use-favorites";
+import {
+  listBuiltinCats,
+  pickRandomCat,
+  type CatHead,
+} from "@/lib/cats";
+import { MAX_SAYS_LENGTH, copy } from "@/lib/copy";
 import { cn } from "@/lib/utils";
 
 export default function SaysPage() {
+  const { customs } = useCustomCats();
+  const pool = useMemo(
+    () => [...customs, ...listBuiltinCats()],
+    [customs],
+  );
   const [text, setText] = useState("");
   const [spoken, setSpoken] = useState<string | null>(null);
-  const [cat, setCat] = useState<CatHead>(() => pickRandomCat());
+  const [cat, setCat] = useState<CatHead>(() => listBuiltinCats()[0]!);
   const { has, toggle } = useFavorites();
 
   const trimmed = text.trim();
   const isTooLong = trimmed.length > MAX_SAYS_LENGTH;
   const canSubmit = trimmed.length > 0 && !isTooLong;
-  const palette = CAT_VARIANTS.find((variant) => variant.id === cat.id)?.palette;
   const isFavorite = has(cat.id);
 
   return (
@@ -78,8 +87,8 @@ export default function SaysPage() {
         </div>
       </div>
 
-      <div className="clay-surface mx-auto flex w-full max-w-xl flex-col items-center gap-6 p-10">
-        <div className="relative flex items-start justify-center pt-10">
+      <CatStage size="lg" className="mx-auto w-full max-w-xl">
+        <div className="relative flex flex-col items-center gap-4 pt-8">
           {spoken ? (
             <div className="clay-enter absolute -top-2 left-1/2 z-10 max-w-[14rem] -translate-x-1/2 rounded-2xl border-2 border-[oklch(0.26_0.04_45)] bg-white px-4 py-2 text-center text-sm font-semibold shadow-[0_4px_0_oklch(0.75_0.09_55_/_0.25)]">
               {spoken}
@@ -93,20 +102,20 @@ export default function SaysPage() {
           <Mascot
             size={200}
             state={spoken ? "thinking" : "idle"}
-            palette={palette}
+            palette={cat.palette}
             markings={cat.markings}
             accessories={cat.accessories}
             title={cat.label}
           />
+          <p className="font-heading text-lg font-bold">{cat.label}</p>
         </div>
-        <p className="font-heading text-lg font-bold">{cat.label}</p>
-      </div>
+      </CatStage>
 
       <div className="flex justify-center gap-3">
         <Button
           variant="secondary"
           onClick={() => {
-            setCat((prev) => pickRandomCat(prev.id));
+            setCat((prev) => pickRandomCat(pool, prev.id));
             setSpoken(null);
           }}
         >
@@ -116,7 +125,7 @@ export default function SaysPage() {
         <Button
           variant="secondary"
           onClick={() => {
-            const added = toggle(cat.id);
+            const added = toggle(cat.id, cat.label);
             toast(added ? copy.toast.favorited : copy.toast.unfavorited);
           }}
         >

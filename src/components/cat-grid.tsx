@@ -17,14 +17,14 @@ export function CatGrid({ cats }: CatGridProps) {
   const { has, toggle } = useFavorites();
   const [active, setActive] = useState<CatHead | null>(null);
 
-  const handleToggle = (id: string) => {
-    const added = toggle(id);
+  const handleToggle = (cat: CatHead) => {
+    const added = toggle(cat.id, cat.label);
     toast(added ? copy.toast.favorited : copy.toast.unfavorited);
   };
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
         {cats.map((cat) => (
           <CatCard
             key={cat.id}

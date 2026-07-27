@@ -1,14 +1,28 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { Shuffle } from "lucide-react";
 
 import { CatGrid } from "@/components/cat-grid";
 import { Button } from "@/components/ui/button";
-import { useCatWall } from "@/hooks/use-cats";
+import { useCustomCats } from "@/hooks/use-custom-cats";
+import { listWallCats, shuffleCats } from "@/lib/cats";
 import { copy } from "@/lib/copy";
 
 export function CatWall() {
-  const { cats, reshuffle, total } = useCatWall();
+  const { customs } = useCustomCats();
+  const base = useMemo(() => listWallCats(customs), [customs]);
+  const [order, setOrder] = useState<string[] | null>(null);
+
+  const cats = useMemo(() => {
+    if (!order) return base;
+    const byId = new Map(base.map((cat) => [cat.id, cat]));
+    const ordered = order
+      .map((id) => byId.get(id))
+      .filter((cat): cat is NonNullable<typeof cat> => cat !== undefined);
+    const missing = base.filter((cat) => !order.includes(cat.id));
+    return [...ordered, ...missing];
+  }, [base, order]);
 
   return (
     <section className="flex flex-col gap-8">
@@ -18,10 +32,13 @@ export function CatWall() {
             {copy.wall.title}
           </h2>
           <p className="text-muted-foreground text-sm">
-            {copy.wall.subtitle(total)}
+            {copy.wall.subtitle(cats.length, customs.length)}
           </p>
         </div>
-        <Button onClick={reshuffle} className="shrink-0">
+        <Button
+          onClick={() => setOrder(shuffleCats(base).map((cat) => cat.id))}
+          className="shrink-0"
+        >
           <Shuffle />
           {copy.wall.reshuffle}
         </Button>

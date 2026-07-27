@@ -18,7 +18,7 @@ const baloo = Baloo_2({
 });
 
 export const metadata: Metadata = {
-  title: `${copy.site.name} · 像素猫猫头`,
+  title: `${copy.site.name} · 像素猫猫头工坊`,
   description: copy.site.tagline,
 };
 

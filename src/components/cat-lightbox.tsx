@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 import { Mascot } from "@/components/mascot/mascot";
+import { CatStage } from "@/components/cat-stage";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { CAT_VARIANTS } from "@/components/mascot/mascot-art";
 import { MASCOT_STATES, type CatHead, type MascotState } from "@/lib/cats";
 import { copy } from "@/lib/copy";
 
@@ -16,9 +16,6 @@ interface CatLightboxProps {
 
 export function CatLightbox({ cat, onClose }: CatLightboxProps) {
   const [state, setState] = useState<MascotState>("idle");
-  const palette = cat
-    ? CAT_VARIANTS.find((variant) => variant.id === cat.id)?.palette
-    : undefined;
 
   return (
     <Dialog
@@ -35,15 +32,17 @@ export function CatLightbox({ cat, onClose }: CatLightboxProps) {
           {cat?.label ?? copy.card.preview}
         </DialogTitle>
         {cat && (
-          <div className="clay-surface flex flex-col items-center gap-6 p-8">
-            <Mascot
-              size={220}
-              state={state}
-              palette={palette}
-              markings={cat.markings}
-              accessories={cat.accessories}
-              title={cat.label}
-            />
+          <div className="clay-surface flex flex-col items-center gap-6 p-6">
+            <CatStage size="lg" className="w-full">
+              <Mascot
+                size={220}
+                state={state}
+                palette={cat.palette}
+                markings={cat.markings}
+                accessories={cat.accessories}
+                title={cat.label}
+              />
+            </CatStage>
             <div className="text-center">
               <p className="font-heading text-2xl font-extrabold">{cat.label}</p>
               <p className="text-muted-foreground mt-1 text-sm">
