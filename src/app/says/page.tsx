@@ -105,7 +105,7 @@ export default function SaysPage() {
             </p>
           )}
           <Mascot
-            size={200}
+            size={192}
             state={spoken ? "thinking" : "idle"}
             palette={cat.palette}
             markings={cat.markings}

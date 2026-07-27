@@ -35,7 +35,7 @@ export function CatLightbox({ cat, onClose }: CatLightboxProps) {
           <div className="gallery-panel flex flex-col items-center gap-6 p-6">
             <CatStage size="lg" className="w-full">
               <Mascot
-                size={220}
+                size={224}
                 state={state}
                 palette={cat.palette}
                 markings={cat.markings}

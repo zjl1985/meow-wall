@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { CAT_GRID, GRID_SIZE } from "@/components/mascot/mascot-art";
 import {
   createRandomDraft,
   getBuiltinCat,
@@ -10,6 +11,13 @@ import {
   randomPalette,
   shuffleCats,
 } from "@/lib/cats";
+
+describe("pixel art geometry", () => {
+  it("基础猫猫头始终是完整的 32×32 网格", () => {
+    expect(CAT_GRID).toHaveLength(GRID_SIZE);
+    expect(CAT_GRID.every((row) => row.length === GRID_SIZE)).toBe(true);
+  });
+});
 
 describe("builtin / special cats", () => {
   it("内置猫数量充足且 id 唯一", () => {

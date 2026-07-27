@@ -11,7 +11,9 @@
  * (`scripts/gen-mascot-svg.ts`) consume `buildRects()` / `toSvg()` from here, so
  * the standalone `.svg` files are derived artifacts — never hand-edited.
  *
- * Geometry: 32×32 grid, 2px per cell, rendered into a 64×64 viewBox.
+ * Geometry: a 32×32 body grid plus a shared 1px face-detail layer, rendered
+ * into a 64×64 viewBox. Every skin therefore gets exactly the same cat head;
+ * a variant can only change colour, optional fur markings, and accessories.
  */
 
 // ---------------------------------------------------------------------------
@@ -35,13 +37,13 @@ export interface MascotPalette {
 export type Overlay = Readonly<Record<number, string>>;
 
 export const DEFAULT_PALETTE: MascotPalette = {
-  head: "#92A5C6",
-  headDark: "#686791",
-  headLight: "#BECEE8",
-  earInner: "#EE676B",
-  ink: "#14042B",
-  blush: "#DBA1B7",
-  nose: "#2D304F",
+  head: "#6F94AA",
+  headDark: "#35536E",
+  headLight: "#A9CBD8",
+  earInner: "#F05E68",
+  ink: "#172033",
+  blush: "#F09AA8",
+  nose: "#26384B",
   white: "#FFFFFF",
 };
 
@@ -76,7 +78,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#343A56",
       headLight: "#8CA0C2",
       earInner: "#EE676B",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E48EAA",
       nose: "#2D304F",
       white: "#FFFFFF",
@@ -109,7 +111,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#A94836",
       headLight: "#F5A34B",
       earInner: "#EE676B",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#F49AB0",
       nose: "#2D304F",
       white: "#FFFFFF",
@@ -129,7 +131,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#C87842",
       headLight: "#FFD8A2",
       earInner: "#EE676B",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#EFA3B8",
       nose: "#2D304F",
       white: "#FFFFFF",
@@ -151,7 +153,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#AEC0D6",
       headLight: "#FFFFFF",
       earInner: "#EE676B",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E7A4B8",
       nose: "#2D304F",
       white: "#FFFFFF",
@@ -175,7 +177,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#4E5A82",
       headLight: "#D9F0FF",
       earInner: "#EE676B",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#F0A1B6",
       nose: "#343A56",
       white: "#FFFFFF",
@@ -200,7 +202,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#6A3A3E",
       headLight: "#F0BE86",
       earInner: "#EE676B",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#ECA0B3",
       nose: "#4A2A35",
       white: "#FFFFFF",
@@ -225,7 +227,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#4D2638",
       headLight: "#A85A51",
       earInner: "#D95B64",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#D98AA0",
       nose: "#2A1A2C",
       white: "#FFFFFF",
@@ -240,7 +242,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#A85A7C",
       headLight: "#F7C8E0",
       earInner: "#D95B7C",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#F0A0B8",
       nose: "#7C3A56",
       white: "#FFFFFF",
@@ -254,7 +256,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#4A8A72",
       headLight: "#B4E8D4",
       earInner: "#EE9B8C",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E0A8BC",
       nose: "#3A584A",
       white: "#FFFFFF",
@@ -268,7 +270,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#7A5EA2",
       headLight: "#D8C8F0",
       earInner: "#EE7E8C",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E0A8C4",
       nose: "#5A3A72",
       white: "#FFFFFF",
@@ -289,7 +291,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#9E3028",
       headLight: "#E88878",
       earInner: "#EE5060",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E898A0",
       nose: "#6A1E18",
       white: "#FFFFFF",
@@ -309,7 +311,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#1A1A24",
       headLight: "#5C5C6A",
       earInner: "#D95B64",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#C888A0",
       nose: "#0A0A12",
       white: "#E8E8F0",
@@ -323,7 +325,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#A8902A",
       headLight: "#F8E888",
       earInner: "#EE8C6C",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E8B8A0",
       nose: "#6A5A1A",
       white: "#FFFFFF",
@@ -337,7 +339,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#4A7A2E",
       headLight: "#A4DC80",
       earInner: "#EE8C6C",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#D8B0A0",
       nose: "#3A5A1E",
       white: "#FFFFFF",
@@ -357,7 +359,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#A84040",
       headLight: "#F0A0A0",
       earInner: "#EE5060",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#F0B0B8",
       nose: "#7C2828",
       white: "#FFFFFF",
@@ -371,7 +373,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#151822",
       headLight: "#555B6D",
       earInner: "#D95B64",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#C9869A",
       nose: "#0C0E14",
       white: "#FFFFFF",
@@ -396,7 +398,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#2C1C26",
       headLight: "#C87648",
       earInner: "#D95B64",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#D18A9C",
       nose: "#2A1A24",
       white: "#FFFFFF",
@@ -420,7 +422,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#3A2A34",
       headLight: "#FFF5D8",
       earInner: "#EE676B",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#ECA0B3",
       nose: "#2D304F",
       white: "#FFFFFF",
@@ -444,7 +446,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#252938",
       headLight: "#FFFFFF",
       earInner: "#E890A4",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E3A0B2",
       nose: "#1A1E2C",
       white: "#FFFFFF",
@@ -465,7 +467,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#232844",
       headLight: "#AAB7E8",
       earInner: "#D97890",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#D6A2C0",
       nose: "#20243A",
       white: "#FFFFFF",
@@ -488,7 +490,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#267184",
       headLight: "#A8E8EA",
       earInner: "#EE8C8C",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E7A0B4",
       nose: "#1C4E5A",
       white: "#FFFFFF",
@@ -507,7 +509,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#B85E48",
       headLight: "#FFD0A6",
       earInner: "#EC6F78",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#F0A0B6",
       nose: "#7A3A32",
       white: "#FFFFFF",
@@ -522,7 +524,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#2F356C",
       headLight: "#91A0EA",
       earInner: "#E07990",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#CFA0D0",
       nose: "#252B58",
       white: "#FFFFFF",
@@ -537,7 +539,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#5F8238",
       headLight: "#D4E89C",
       earInner: "#E89A78",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#DDB0A0",
       nose: "#3E5428",
       white: "#FFFFFF",
@@ -557,7 +559,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#A45B66",
       headLight: "#F2C899",
       earInner: "#E86F76",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#F0A8B8",
       nose: "#7A3C46",
       white: "#FFFFFF",
@@ -572,7 +574,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#6E3428",
       headLight: "#E2945E",
       earInner: "#D95B64",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E090A0",
       nose: "#4C241E",
       white: "#FFFFFF",
@@ -592,7 +594,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#4E5566",
       headLight: "#C9D0DA",
       earInner: "#E47A8C",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#D89AAC",
       nose: "#343846",
       white: "#FFFFFF",
@@ -607,7 +609,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#716092",
       headLight: "#DED2F0",
       earInner: "#EC7E92",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E2A0C0",
       nose: "#554066",
       white: "#FFFFFF",
@@ -630,7 +632,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#9B6B22",
       headLight: "#F4D870",
       earInner: "#E98468",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E9A090",
       nose: "#654214",
       white: "#FFFFFF",
@@ -650,7 +652,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#355D78",
       headLight: "#B9DFA8",
       earInner: "#E78BA0",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#DCA8C0",
       nose: "#28445A",
       white: "#FFFFFF",
@@ -672,7 +674,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#3A2424",
       headLight: "#D8AA7A",
       earInner: "#D85E66",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#D898A0",
       nose: "#241616",
       white: "#FFFFFF",
@@ -732,7 +734,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#7A3E2A",
       headLight: "#F1B76E",
       earInner: "#EE6A72",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#E99094",
       nose: "#5A2B22",
       white: "#FFFFFF",
@@ -757,7 +759,7 @@ export const CAT_VARIANTS: readonly CatVariant[] = [
       headDark: "#5F7A45",
       headLight: "#E3E5A4",
       earInner: "#D8A078",
-      ink: "#14042B",
+      ink: "#172033",
       blush: "#D6A8A0",
       nose: "#445838",
       white: "#FFFFFF",
@@ -913,67 +915,118 @@ export function isPixelToken(token: string): token is PixelToken {
 export const GRID_SIZE = 32;
 export const CELL = 2;
 
+/** The aspect ratio of the approved orange-cat SVG reference. */
+export const MASCOT_VIEWBOX_WIDTH = 386;
+export const MASCOT_VIEWBOX_HEIGHT = 288;
+const REFERENCE_CELL = 20;
+
 /**
- * The canonical cat face. Each character is one 2×2 pixel block; `.` is
- * transparent. This grid is byte-identical to the historical
- * `static-logo.svg` art — the SVG files are generated from it.
+ * The approved cat head, transcribed from `public/orange-cat-reference.svg`.
+ * This is intentionally a separate, larger pixel grid: it preserves the
+ * reference's chunky 20px body pixels and its finer 10px mouth/whisker pass.
+ * Palette tokens keep the drawing reusable for every skin.
+ */
+const REFERENCE_CAT_GRID: readonly string[] = [
+  "...KK.........KK...",
+  "...KDK.......KDK...",
+  "..KRHDK.....KDHRK..",
+  "..KRRHDK....DHRRK..",
+  "..KRRDHDHDHDHDRRK..",
+  "...KDLLDHDHDLLDK...",
+  "...KDHHHHHHHHHDK...",
+  "..KDHKWHHHHHWKHDK..",
+  "..KDHKKHLKLHKKHDKK.",
+  "..KDHBBLKLKLBBHDK..",
+  "..KDHHHHLLLHHHHDKK.",
+  "...KDHHHHHHHHHDK...",
+  "....KDDDDDDDDDK....",
+];
+
+/**
+ * The canonical cat head body. Each character is one 2×2 pixel block; `.` is
+ * transparent. Eyes, nose, mouth and whiskers deliberately live in
+ * `BASE_FACE_DETAILS` below so that all skins share the exact same readable
+ * face at a finer, 1px resolution.
  */
 export const CAT_GRID: readonly string[] = [
   "................................",
   "................................",
   "................................",
   "................................",
-  "....KKKN.................KKKK...",
-  "....KKKN.................KKKK...",
-  "....KKDDKN.............KKDDKK...",
-  "....KKDDKN.............KKDDKK...",
-  "..KKRRHHDDKN.........KKDDHHRRKK.",
-  "..KKRRBHDDNN.........NNDDBBRRKK.",
-  "..KKRRRRHHDDKKKKKKKKKDDHHRRRRKK.",
-  "..KKRRRRHHDDNNNNNNNNNDDHHRRRRKK.",
-  "..KKRRRRDDHHHHHHHHHHHHHDDRRRRKK.",
-  "..HHNNDDHLLLHHHHHHHHHLLHHDDNNHH.",
-  "....KKDDLLLLHHHHHHHHHLLLLDDKK...",
-  "....KKDDLLLHHHHHHHHHHLLLHDDKK...",
-  "....KKDDHHHHHHHHHHHHHHHHHDDKK...",
-  "..NNDDHDND.LHHHHHHHHHNN..HHDDNN.",
-  "..KKDDHHKNWLHHHHHHHHHKKWWHHDDKK.",
-  "KKKKDDHHKKKNHLLNKLLHHKKKKHHDDKKK",
-  "KKKKDDHHKKKNHLLNKLLHHKKKKHHDDKKK",
-  "..KKDDHHBBBBLDKHLNKLLBBBBHHDDKK.",
-  "..KKDDHHBBBBLDKHLNKLLBBBBHHDDKK.",
-  "KKKKDDHHHHHHHL.LL..HHHHHHHHDDKKK",
-  "KKKKDDHHHHHHHLLLLLLHHHHHHHHDDKKK",
-  "....KKDDHHHHHHHHHHHHHHHHHDDKK...",
-  "....KKDDHHHHHHHHHHHHHHHHHDDKK...",
-  "......KKDDDDDDDDDDDDDDDDDKK.....",
-  "......KKDDDDDDDDDDDDDDDDDKK.....",
+  ".....KKK................KKK.....",
+  "....KDDHK..............KHDDK....",
+  "....KRRHHK............KHHRRK....",
+  "...KHRRRLHK..........KHLRRRHK...",
+  "...KHRRRRHHK........KHHRRRRHK...",
+  "...KHHRRRRDHKKKKKKKKHDRRRRHHK...",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  "....KDHHLLLHHHHHHHHHHLLLHHDK....",
+  "....KDHHHHHHHHLHHLHHHHHHHHDK....",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  ".KKKKDHHHHHHHHHHHHHHHHHHHHDKKKK.",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  ".KKKKDHHHHHHHHHHHHHHHHHHHHDKKKK.",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  "....KDHHHHHHHHHHHHHHHHHHHHDK....",
+  ".....KDHHHHHHHHHHHHHHHHHHDK.....",
+  ".....KDDDDDDDDDDDDDDDDDDDDK.....",
+  "......KDDDDDDDDDDDDDDDDDDK......",
   ".......KKKKKKKKKKKKKKKKKK.......",
-  ".......KKKKKKKKKKKKKKKKKK.......",
+  "................................",
+  "................................",
+  "................................",
+  "................................",
+  "................................",
   "................................",
 ];
 
 /**
- * Eye pixels in the base grid: the dark pupil / white glint tokens within the
- * eye band. Used to (a) drive the blink animation and (b) know what to wipe
- * when an expression overrides the eyes.
+ * Face cells reserved for the shared eye/muzzle details. Fur markings cannot
+ * paint here: a tabby stripe must never turn the common cat face into a
+ * different character.
  */
-function isBaseEyePixel(x: number, y: number, token: PixelToken): boolean {
-  if (token !== "K" && token !== "W") return false;
-  if (y < 18 || y > 20) return false;
-  return (x >= 8 && x <= 12) || (x >= 21 && x <= 25);
-}
-
-/** Cells repainted to head color before drawing an overriding eye expression. */
-const EYE_BOX: ReadonlyArray<readonly [number, number]> = (() => {
+const FACE_PROTECTED_CELLS: ReadonlyArray<readonly [number, number]> = (() => {
   const cells: Array<[number, number]> = [];
-  for (let y = 18; y <= 20; y += 1) {
-    for (const x of [8, 9, 10, 11, 21, 22, 23, 24]) {
-      cells.push([x, y]);
-    }
+  for (let y = 16; y <= 24; y += 1) {
+    for (let x = 7; x <= 24; x += 1) cells.push([x, y]);
   }
   return cells;
 })();
+
+const FACE_PROTECTED_CELL_SET = new Set(
+  FACE_PROTECTED_CELLS.map(([x, y]) => `${x}:${y}`),
+);
+
+interface FaceDetail {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  token: PixelToken;
+  /** Eye details are wrapped in the blink group by the React component. */
+  eye?: boolean;
+}
+
+/** Fine-pixel pass from the approved SVG: closed 人 mouth and 3 whiskers. */
+const REFERENCE_FACE_DETAILS: readonly FaceDetail[] = [
+  { x: 10, y: 165, w: 50, h: 10, token: "K" },
+  { x: 0, y: 185, w: 60, h: 10, token: "K" },
+  { x: 10, y: 205, w: 50, h: 10, token: "K" },
+  { x: 326, y: 165, w: 50, h: 10, token: "K" },
+  { x: 326, y: 185, w: 60, h: 10, token: "K" },
+  { x: 326, y: 205, w: 50, h: 10, token: "K" },
+  { x: 150, y: 190, w: 80, h: 10, token: "L" },
+  { x: 145, y: 200, w: 100, h: 30, token: "L" },
+  { x: 175, y: 190, w: 30, h: 10, token: "K" },
+  { x: 185, y: 200, w: 10, h: 10, token: "K" },
+  { x: 180, y: 205, w: 10, h: 5, token: "K" },
+  { x: 170, y: 210, w: 15, h: 5, token: "K" },
+  { x: 190, y: 205, w: 10, h: 5, token: "K" },
+  { x: 195, y: 210, w: 15, h: 5, token: "K" },
+];
 
 // ---------------------------------------------------------------------------
 // Expressions (axis 2) — eye / mouth overlays keyed by state
@@ -988,76 +1041,68 @@ export type MascotState =
   | "angry";
 
 interface Expression {
-  /** Eye overlay; when present the base eyes are wiped first. */
-  eyes?: Overlay;
-  /** Mouth / muzzle overlay, painted into the body layer. */
-  mouth?: Overlay;
-  /** Brow overlay (above eyes), painted into the body layer. */
-  brow?: Overlay;
+  /** Finer face details replacing the idle eyes/mouth. */
+  details?: readonly FaceDetail[];
   /** Whether the (open) eyes should blink. */
   blink: boolean;
 }
 
-/*
- * Overlay authoring guide (column ruler):
- *   0         1         2         3
- *   0123456789012345678901234567890 1
- * Eyes live around cols 8-11 (left) / 21-24 (right), rows 18-20.
- * Mouth lives around cols 12-19, rows 23-25.
- */
+const EXPRESSION_MOUTH: readonly FaceDetail[] = [
+  { x: 29, y: 40, w: 6, h: 3, token: "N" },
+  { x: 31, y: 43, w: 2, h: 3, token: "K" },
+];
+
 export const EXPRESSIONS: Record<MascotState, Expression> = {
   idle: { blink: true },
   thinking: { blink: true },
   success: {
     blink: false,
-    // ‿ ‿  smiling eyes (eye boxes: cols 8-11 / 21-24)
-    eyes: {
-      18: "........K..K.........K..K.......",
-      19: ".........KK...........KK........",
-    },
-    mouth: {
-      23: ".............K....K.............",
-      24: "..............KKKK..............",
-    },
+    details: [
+      ...EXPRESSION_MOUTH,
+      { x: 16, y: 34, w: 3, h: 2, token: "K", eye: true },
+      { x: 19, y: 36, w: 5, h: 2, token: "K", eye: true },
+      { x: 41, y: 36, w: 5, h: 2, token: "K", eye: true },
+      { x: 46, y: 34, w: 3, h: 2, token: "K", eye: true },
+      { x: 27, y: 47, w: 10, h: 2, token: "K" },
+    ],
   },
   error: {
     blink: false,
-    // x x  crossed eyes
-    eyes: {
-      18: "........K..K.........K..K.......",
-      19: ".........KK...........KK........",
-      20: "........K..K.........K..K.......",
-    },
-    mouth: {
-      23: "..............KKKK..............",
-      24: ".............K....K.............",
-    },
+    details: [
+      ...EXPRESSION_MOUTH,
+      { x: 16, y: 32, w: 3, h: 2, token: "K", eye: true },
+      { x: 21, y: 32, w: 3, h: 2, token: "K", eye: true },
+      { x: 18, y: 34, w: 4, h: 2, token: "K", eye: true },
+      { x: 16, y: 38, w: 3, h: 2, token: "K", eye: true },
+      { x: 21, y: 38, w: 3, h: 2, token: "K", eye: true },
+      { x: 41, y: 32, w: 3, h: 2, token: "K", eye: true },
+      { x: 46, y: 32, w: 3, h: 2, token: "K", eye: true },
+      { x: 43, y: 34, w: 4, h: 2, token: "K", eye: true },
+      { x: 41, y: 38, w: 3, h: 2, token: "K", eye: true },
+      { x: 46, y: 38, w: 3, h: 2, token: "K", eye: true },
+      { x: 28, y: 47, w: 8, h: 2, token: "K" },
+    ],
   },
   sleeping: {
     blink: false,
-    // - -  closed lids
-    eyes: {
-      19: "........KKKK.........KKKK.......",
-    },
-    mouth: {
-      24: "..............KK................",
-    },
+    details: [
+      ...EXPRESSION_MOUTH,
+      { x: 16, y: 36, w: 8, h: 2, token: "K", eye: true },
+      { x: 41, y: 36, w: 8, h: 2, token: "K", eye: true },
+    ],
   },
   angry: {
     blink: false,
-    // \  /  brows angling down toward the centre + narrowed glare
-    brow: {
-      16: ".......KK..............KK.......",
-      17: ".........KK.........KK..........",
-    },
-    eyes: {
-      19: "........KKK..........KKK........",
-      20: "..........KK........KK..........",
-    },
-    mouth: {
-      23: "..............KKKK..............",
-      24: ".............K....K.............",
-    },
+    details: [
+      ...EXPRESSION_MOUTH,
+      { x: 15, y: 30, w: 5, h: 2, token: "K" },
+      { x: 19, y: 32, w: 5, h: 2, token: "K" },
+      { x: 41, y: 32, w: 5, h: 2, token: "K" },
+      { x: 45, y: 30, w: 5, h: 2, token: "K" },
+      { x: 17, y: 36, w: 7, h: 3, token: "K", eye: true },
+      { x: 41, y: 36, w: 7, h: 3, token: "K", eye: true },
+      { x: 28, y: 47, w: 8, h: 2, token: "K" },
+    ],
   },
 };
 
@@ -1085,9 +1130,9 @@ export type MascotAccessory =
 export const ACCESSORIES: Record<MascotAccessory, Overlay> = {
   // Two lenses over the eye boxes (7-12 / 20-25) joined by a thin nose bridge.
   sunglasses: {
+    15: ".......KKKKKK.......KKKKKK......",
+    16: ".......KWKKKKKKKKKKKKKWKKKK.....",
     17: ".......KKKKKK.......KKKKKK......",
-    18: ".......KWKKKKKKKKKKKKKWKKKK.....",
-    19: ".......KKKKKK.......KKKKKK......",
   },
   // Small bowtie below chin (rows 27-29, cols 14-18).
   bowtie: {
@@ -1122,9 +1167,9 @@ export const ACCESSORIES: Record<MascotAccessory, Overlay> = {
   },
   // Round glasses — thinner frames than sunglasses.
   glasses: {
+    15: ".......KKKKK.......KKKKK........",
+    16: ".......K...K.......K...K........",
     17: ".......KKKKK.......KKKKK........",
-    18: ".......K...K.......K...K........",
-    19: ".......KKKKK.......KKKKK........",
   },
   // Small flower on left ear (rows 6-9, cols 2-6).
   flower: {
@@ -1189,12 +1234,14 @@ function applyOverlay(
   grid: string[][],
   overlay: Overlay,
   onPaint?: (x: number, y: number) => void,
+  canPaint?: (x: number, y: number, current: string) => boolean,
 ): void {
   for (const [rowKey, row] of Object.entries(overlay)) {
     const y = Number(rowKey);
     for (let x = 0; x < row.length && x < GRID_SIZE; x += 1) {
       const ch = row[x];
       if (ch === "." || !isPixelToken(ch)) continue;
+      if (canPaint && !canPaint(x, y, grid[y][x])) continue;
       grid[y][x] = ch;
       onPaint?.(x, y);
     }
@@ -1210,79 +1257,109 @@ export function buildRects(
   palette: MascotPalette,
   { state = "idle", accessories = [], markings }: BuildOptions = {},
 ): MascotRect[] {
-  const grid: string[][] = CAT_GRID.map((row) => row.split(""));
-  const eyeMask: boolean[][] = grid.map((row) => row.map(() => false));
-  const accGrid: string[][] = grid.map((row) => row.map(() => "."));
+  const rects: MascotRect[] = [];
 
-  // Skin markings sit beneath the expression / eyes.
-  if (markings) applyOverlay(grid, markings);
-
-  const expr = EXPRESSIONS[state];
-
-  if (expr.eyes) {
-    // Wipe the base eyes, then paint the expression's eyes.
-    for (const [x, y] of EYE_BOX) grid[y][x] = "H";
-    applyOverlay(grid, expr.eyes, (x, y) => {
-      eyeMask[y][x] = true;
-    });
-  } else {
-    // Keep the base eyes as the eye layer (they blink).
-    for (let y = 0; y < GRID_SIZE; y += 1) {
-      for (let x = 0; x < GRID_SIZE; x += 1) {
-        const t = grid[y][x];
-        if (isPixelToken(t) && isBaseEyePixel(x, y, t)) eyeMask[y][x] = true;
-      }
+  // First paint the approved template exactly as authored. This is the one
+  // base head every cat shares; only palette tokens differ per variant.
+  for (let y = 0; y < REFERENCE_CAT_GRID.length; y += 1) {
+    const row = REFERENCE_CAT_GRID[y];
+    for (let x = 0; x < row.length; x += 1) {
+      const token = row[x];
+      if (!isPixelToken(token)) continue;
+      const isEye =
+        (y === 7 && (x === 5 || x === 6 || x === 12 || x === 13)) ||
+        (y === 8 && (x === 5 || x === 6 || x === 12 || x === 13));
+      rects.push({
+        x: x * REFERENCE_CELL,
+        y: (y + 1) * REFERENCE_CELL,
+        w: REFERENCE_CELL,
+        h: REFERENCE_CELL,
+        fill: tokenColor(token, palette),
+        eye: isEye,
+        accessory: false,
+      });
     }
   }
 
-  if (expr.brow) applyOverlay(grid, expr.brow);
-  if (expr.mouth) applyOverlay(grid, expr.mouth);
+  const grid: string[][] = CAT_GRID.map((row) => row.split(""));
+  const accGrid: string[][] = grid.map((row) => row.map(() => "."));
+
+  // Skin markings sit beneath the expression / eyes.
+  if (markings) {
+    applyOverlay(
+      grid,
+      markings,
+      undefined,
+      (x, y, current) =>
+        isPixelToken(current) &&
+        current !== "K" &&
+        !FACE_PROTECTED_CELL_SET.has(`${x}:${y}`),
+    );
+  }
+
+  const expr = EXPRESSIONS[state];
 
   for (const acc of accessories) {
     applyOverlay(accGrid, ACCESSORIES[acc]);
   }
 
-  const rects: MascotRect[] = [];
-
-  // Body + eyes, run-length encoded; break runs on token / eye-layer change.
+  // Breed markings retain their existing 32×32 authoring format. Project them
+  // onto the reference canvas, but only emit cells changed by the overlay.
   for (let y = 0; y < GRID_SIZE; y += 1) {
-    let runStart = -1;
-    let runToken: PixelToken | null = null;
-    let runEye = false;
-
-    const flush = (endX: number) => {
-      if (runStart < 0 || runToken === null) return;
+    for (let x = 0; x < GRID_SIZE; x += 1) {
+      const token = grid[y][x];
+      if (token === CAT_GRID[y][x] || !isPixelToken(token)) continue;
       rects.push({
-        x: runStart * CELL,
-        y: y * CELL,
-        w: (endX - runStart) * CELL,
-        h: CELL,
-        fill: tokenColor(runToken, palette),
-        eye: runEye,
+        x: (x / GRID_SIZE) * MASCOT_VIEWBOX_WIDTH,
+        y: (y / GRID_SIZE) * MASCOT_VIEWBOX_HEIGHT,
+        w: MASCOT_VIEWBOX_WIDTH / GRID_SIZE,
+        h: MASCOT_VIEWBOX_HEIGHT / GRID_SIZE,
+        fill: tokenColor(token, palette),
+        eye: false,
         accessory: false,
       });
-      runStart = -1;
-      runToken = null;
-      runEye = false;
-    };
-
-    for (let x = 0; x < GRID_SIZE; x += 1) {
-      const ch = grid[y][x];
-      const isEye = eyeMask[y][x];
-      if (isPixelToken(ch)) {
-        if (runToken === ch && runEye === isEye) continue;
-        flush(x);
-        runStart = x;
-        runToken = ch;
-        runEye = isEye;
-      } else {
-        flush(x);
-      }
     }
-    flush(GRID_SIZE);
   }
 
-  // Accessory layer on top, run-length encoded.
+  // Re-apply the source SVG's finer pass after markings. The idle cat now
+  // matches the approved standalone SVG rather than an approximation of it.
+  for (const detail of REFERENCE_FACE_DETAILS) {
+    rects.push({
+      x: detail.x,
+      y: detail.y,
+      w: detail.w,
+      h: detail.h,
+      fill: tokenColor(detail.token, palette),
+      eye: detail.eye ?? false,
+      accessory: false,
+    });
+  }
+
+  // Non-idle states replace only the expressive parts of the common face.
+  // Details were authored in the legacy 64px coordinate system, so project
+  // them into the reference canvas here.
+  if (expr.details) {
+    for (const clear of [
+      { x: 95, y: 155, w: 50, h: 50, token: "H" as PixelToken },
+      { x: 240, y: 155, w: 50, h: 50, token: "H" as PixelToken },
+      { x: 145, y: 190, w: 100, h: 40, token: "L" as PixelToken },
+    ]) {
+      rects.push({ ...clear, fill: tokenColor(clear.token, palette), eye: false, accessory: false });
+    }
+    for (const detail of expr.details) {
+      rects.push({
+        x: (detail.x / 64) * MASCOT_VIEWBOX_WIDTH,
+        y: (detail.y / 64) * MASCOT_VIEWBOX_HEIGHT,
+        w: (detail.w / 64) * MASCOT_VIEWBOX_WIDTH,
+        h: (detail.h / 64) * MASCOT_VIEWBOX_HEIGHT,
+        fill: tokenColor(detail.token, palette),
+        eye: detail.eye ?? false,
+        accessory: false,
+      });
+    }
+  }
+
+  // Accessory overlays also retain their simple 32×32 authoring grid.
   for (let y = 0; y < GRID_SIZE; y += 1) {
     let runStart = -1;
     let runToken: PixelToken | null = null;
@@ -1290,10 +1367,10 @@ export function buildRects(
     const flush = (endX: number) => {
       if (runStart < 0 || runToken === null) return;
       rects.push({
-        x: runStart * CELL,
-        y: y * CELL,
-        w: (endX - runStart) * CELL,
-        h: CELL,
+        x: (runStart / GRID_SIZE) * MASCOT_VIEWBOX_WIDTH,
+        y: (y / GRID_SIZE) * MASCOT_VIEWBOX_HEIGHT,
+        w: ((endX - runStart) / GRID_SIZE) * MASCOT_VIEWBOX_WIDTH,
+        h: MASCOT_VIEWBOX_HEIGHT / GRID_SIZE,
         fill: tokenColor(runToken, palette),
         eye: false,
         accessory: true,
@@ -1324,21 +1401,19 @@ export function buildRects(
 // ---------------------------------------------------------------------------
 
 const IDLE_STYLE = `  <style>
-    .breathe { transform-box: fill-box; transform-origin: 50% 90%; animation: cat-breathe 4s ease-in-out infinite }
     .eyes { transform-box: fill-box; transform-origin: 50% 50%; animation: cat-blink 5.2s ease-in-out infinite }
 
-    @keyframes cat-breathe { 0%,100% { transform: scale(1) } 50% { transform: scale(1.02) } }
     @keyframes cat-blink { 0%,92%,100% { transform: scaleY(1) } 95% { transform: scaleY(0.12) } 97% { transform: scaleY(1) } }
 
     @media (prefers-reduced-motion: reduce) {
-      .breathe, .eyes { animation: none }
+      .eyes { animation: none }
     }
   </style>
 `;
 
 export interface SvgOptions {
   ariaLabel: string;
-  /** When true, emits the breathe/blink animation + eye classes. */
+  /** When true, emits the blink animation + eye classes. */
   animated?: boolean;
   /** Per-skin breed markings. */
   markings?: Overlay;
@@ -1358,11 +1433,11 @@ export function toSvg(palette: MascotPalette, opts: SvgOptions): string {
     accessories: opts.accessories,
     markings: opts.markings,
   });
-  const open = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="${opts.ariaLabel}" shape-rendering="crispEdges">`;
+  const open = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MASCOT_VIEWBOX_WIDTH} ${MASCOT_VIEWBOX_HEIGHT}" width="${MASCOT_VIEWBOX_WIDTH}" height="${MASCOT_VIEWBOX_HEIGHT}" role="img" aria-label="${opts.ariaLabel}" shape-rendering="crispEdges">`;
 
   if (opts.animated) {
     const body = rects.map((r) => rectTag(r, "    ", true)).join("\n");
-    return `${open}\n${IDLE_STYLE}\n  <g class="breathe">\n${body}\n  </g>\n</svg>\n`;
+    return `${open}\n${IDLE_STYLE}\n${body}\n</svg>\n`;
   }
 
   const body = rects.map((r) => rectTag(r, "  ", false)).join("\n");

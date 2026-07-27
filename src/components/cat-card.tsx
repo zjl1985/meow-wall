@@ -52,7 +52,7 @@ export function CatCard({
       >
         <CatStage size="sm" className="w-full border-0! bg-transparent">
           <Mascot
-            size={112}
+            size={128}
             state={state}
             palette={cat.palette}
             markings={cat.markings}

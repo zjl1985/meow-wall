@@ -35,6 +35,7 @@ export function SiteNav() {
               <Button
                 key={href}
                 render={<Link href={href} />}
+                nativeButton={false}
                 variant={active ? "secondary" : "ghost"}
                 className={
                   active
@@ -48,6 +49,7 @@ export function SiteNav() {
           })}
           <Button
             variant="outline"
+            nativeButton={false}
             render={
               <a href={REPO_URL} target="_blank" rel="noreferrer" />
             }

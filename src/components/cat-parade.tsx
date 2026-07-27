@@ -33,7 +33,7 @@ export function CatParade({ onDone }: CatParadeProps) {
           style={{ animationDelay: `${index * 180}ms` }}
         >
           <Mascot
-            size={72}
+            size={64}
             state={index % 2 === 0 ? "success" : "thinking"}
             palette={cat.palette}
             markings={cat.markings}

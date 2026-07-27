@@ -82,7 +82,7 @@ export default function StudioPage() {
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <CatStage size="xl" className="w-full">
           <Mascot
-            size={280}
+            size={256}
             state={draft.state}
             palette={draft.palette}
             accessories={draft.accessories}
@@ -203,7 +203,7 @@ export default function StudioPage() {
               <Download />
               {copy.studio.exportSvg}
             </Button>
-            <Button variant="ghost" render={<Link href="/" />}>
+            <Button variant="ghost" render={<Link href="/" />} nativeButton={false}>
               {copy.nav.wall}
             </Button>
           </div>

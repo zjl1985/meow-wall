@@ -6,6 +6,8 @@ import {
   buildRects,
   DEFAULT_PALETTE,
   EXPRESSIONS,
+  MASCOT_VIEWBOX_HEIGHT,
+  MASCOT_VIEWBOX_WIDTH,
   type MascotAccessory,
   type MascotPalette,
   type MascotState,
@@ -96,10 +98,8 @@ export function Mascot({
   const blink = EXPRESSIONS[state].blink;
 
   const cssParts = [
-    `[data-cat="${uid}"] .ah-cat-breathe { transform-box: fill-box; transform-origin: 50% 90%; animation: ah-cat-breathe 4s ease-in-out infinite }`,
     `[data-cat="${uid}"] .ah-cat-think { transform-box: fill-box; transform-origin: 50% 100%; animation: ah-cat-bob 1.8s ease-in-out infinite }`,
     `[data-cat="${uid}"] .ah-cat-zzz text { animation: ah-cat-float 2.6s ease-in-out infinite }`,
-    "@keyframes ah-cat-breathe { 0%,100% { transform: scale(1) } 50% { transform: scale(1.03) } }",
     "@keyframes ah-cat-bob { 0%,100% { transform: translateY(0); opacity: .8 } 50% { transform: translateY(-3px); opacity: 1 } }",
     "@keyframes ah-cat-float { 0% { transform: translateY(1px); opacity: .3 } 50% { transform: translateY(-3px); opacity: 1 } 100% { transform: translateY(-5px); opacity: 0 } }",
   ];
@@ -125,10 +125,11 @@ export function Mascot({
       aria-label={title}
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox={`0 0 ${MASCOT_VIEWBOX_WIDTH} ${MASCOT_VIEWBOX_HEIGHT}`}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       shapeRendering="crispEdges"
+      style={{ imageRendering: "pixelated" }}
     >
       {animated && <style>{css}</style>}
       <title>{title}</title>

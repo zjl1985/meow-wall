@@ -78,7 +78,12 @@ export function CatHero() {
           >
             <Volume2 />
           </Button>
-          <Button size="lg" variant="outline" render={<Link href="/studio" />}>
+          <Button
+            size="lg"
+            variant="outline"
+            render={<Link href="/studio" />}
+            nativeButton={false}
+          >
             {copy.hero.makeOne}
           </Button>
         </div>
@@ -99,7 +104,7 @@ export function CatHero() {
       <CatStage size="xl" className="w-full">
         <Mascot
           key={`${cat.id}-${state}-${rollCount}`}
-          size={280}
+          size={256}
           state={state}
           palette={cat.palette}
           markings={cat.markings}
