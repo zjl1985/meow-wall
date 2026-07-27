@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Dices, Heart, Sparkles, Volume2 } from "lucide-react";
+import { Dices, Heart, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -40,19 +40,19 @@ export function CatHero() {
   }, [roll]);
 
   return (
-    <section className="grid items-center gap-10 py-6 lg:grid-cols-[1.1fr_0.9fr]">
-      <div className="flex flex-col gap-5">
-        <p className="text-primary text-xs font-bold tracking-[0.22em]">
+    <section className="gallery-enter grid items-end gap-10 border-b border-white/10 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:py-16">
+      <div className="flex flex-col gap-6">
+        <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
           {copy.hero.eyebrow}
         </p>
-        <h1 className="font-heading clay-text-shadow text-5xl leading-tight font-extrabold tracking-tight">
+        <h1 className="font-heading text-5xl leading-[0.95] font-semibold tracking-tight md:text-7xl">
           {copy.hero.title}
         </h1>
         <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
           {copy.hero.hint}
         </p>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 pt-2">
           <Button size="lg" onClick={roll}>
             <Dices />
             {copy.hero.roll}
@@ -66,7 +66,7 @@ export function CatHero() {
             }}
           >
             <Heart
-              className={cn(isFavorite && "fill-destructive text-destructive")}
+              className={cn(isFavorite && "fill-primary text-primary")}
             />
             {isFavorite ? copy.card.unfavorite : copy.card.favorite}
           </Button>
@@ -79,27 +79,24 @@ export function CatHero() {
             <Volume2 />
           </Button>
           <Button size="lg" variant="outline" render={<Link href="/studio" />}>
-            <Sparkles />
             {copy.hero.makeOne}
           </Button>
         </div>
 
-        <div className="flex items-center gap-3 text-sm">
-          <span className="font-heading text-lg font-bold">{cat.label}</span>
-          <span className="text-muted-foreground">·</span>
-          <span className="text-muted-foreground">{copy.state[state]}</span>
+        <div className="text-muted-foreground flex items-center gap-3 font-mono text-xs tracking-wide uppercase">
+          <span className="text-foreground">{cat.label}</span>
+          <span>/</span>
+          <span>{copy.state[state]}</span>
           {rollCount > 1 && (
             <>
-              <span className="text-muted-foreground">·</span>
-              <span className="text-muted-foreground">
-                {copy.hero.rollCount(rollCount)}
-              </span>
+              <span>/</span>
+              <span>{copy.hero.rollCount(rollCount)}</span>
             </>
           )}
         </div>
       </div>
 
-      <CatStage size="xl" className="clay-enter w-full">
+      <CatStage size="xl" className="w-full">
         <Mascot
           key={`${cat.id}-${state}-${rollCount}`}
           size={280}

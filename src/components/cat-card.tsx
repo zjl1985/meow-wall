@@ -27,12 +27,20 @@ export function CatCard({
   onPreview,
 }: CatCardProps) {
   return (
-    <div className="clay-surface clay-pop clay-enter group relative overflow-hidden p-3">
+    <div className="gallery-panel gallery-lift gallery-enter group relative overflow-hidden p-3">
       {cat.kind === "custom" && (
-        <Badge className="absolute top-3 left-3 z-10">{copy.card.customBadge}</Badge>
+        <Badge
+          variant="outline"
+          className="absolute top-3 left-3 z-10 border-white/20 bg-black/30"
+        >
+          {copy.card.customBadge}
+        </Badge>
       )}
       {cat.kind === "special" && (
-        <Badge variant="secondary" className="absolute top-3 left-3 z-10">
+        <Badge
+          variant="outline"
+          className="absolute top-3 left-3 z-10 border-white/20 bg-black/30"
+        >
           {copy.card.specialBadge}
         </Badge>
       )}
@@ -42,7 +50,7 @@ export function CatCard({
         onClick={() => onPreview(cat)}
         className="flex w-full flex-col items-center gap-3"
       >
-        <CatStage size="sm" className="w-full !rounded-2xl shadow-none">
+        <CatStage size="sm" className="w-full border-0! bg-transparent">
           <Mascot
             size={112}
             state={state}
@@ -52,7 +60,9 @@ export function CatCard({
             title={cat.label}
           />
         </CatStage>
-        <span className="font-heading text-sm font-bold">{cat.label}</span>
+        <span className="font-heading text-sm font-medium tracking-wide">
+          {cat.label}
+        </span>
       </PressArea>
 
       <div className="absolute top-3 right-3 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
@@ -62,9 +72,7 @@ export function CatCard({
           aria-label={isFavorite ? copy.card.unfavorite : copy.card.favorite}
           onClick={() => onToggleFavorite(cat)}
         >
-          <Heart
-            className={cn(isFavorite && "fill-destructive text-destructive")}
-          />
+          <Heart className={cn(isFavorite && "fill-primary text-primary")} />
         </Button>
       </div>
     </div>

@@ -25,17 +25,21 @@ export function CatWall() {
   }, [base, order]);
 
   return (
-    <section className="flex flex-col gap-8">
+    <section className="flex flex-col gap-8 py-14">
       <header className="flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-heading clay-text-shadow text-3xl font-extrabold">
+          <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
+            Archive / 03
+          </p>
+          <h2 className="font-heading mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
             {copy.wall.title}
           </h2>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground mt-2 text-sm">
             {copy.wall.subtitle(cats.length, customs.length)}
           </p>
         </div>
         <Button
+          variant="outline"
           onClick={() => setOrder(shuffleCats(base).map((cat) => cat.id))}
           className="shrink-0"
         >

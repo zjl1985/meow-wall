@@ -21,23 +21,31 @@ export function SpecialCats() {
   const [active, setActive] = useState<CatHead | null>(null);
 
   return (
-    <section className="flex flex-col gap-6">
-      <header>
-        <p className="text-primary text-xs font-bold tracking-[0.2em]">
-          EASTER EGGS
-        </p>
-        <h2 className="font-heading clay-text-shadow mt-1 text-3xl font-extrabold">
-          {copy.specials.title}
-        </h2>
-        <p className="text-muted-foreground mt-1 text-sm">
+    <section className="flex flex-col gap-8 border-b border-white/10 py-14">
+      <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
+            Selected / 02
+          </p>
+          <h2 className="font-heading mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
+            {copy.specials.title}
+          </h2>
+        </div>
+        <p className="text-muted-foreground max-w-sm text-sm">
           {copy.specials.subtitle}
         </p>
       </header>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {cats.map((cat) => (
-          <div key={cat.id} className="clay-surface clay-pop group relative p-3">
-            <Badge className="absolute top-3 left-3 z-10">
+          <div
+            key={cat.id}
+            className="gallery-panel gallery-lift group relative p-3"
+          >
+            <Badge
+              variant="outline"
+              className="absolute top-3 left-3 z-10 border-white/20 bg-black/30"
+            >
               {copy.card.specialBadge}
             </Badge>
             <PressArea
@@ -45,7 +53,7 @@ export function SpecialCats() {
               onClick={() => setActive(cat)}
               aria-label={`${copy.card.preview}：${cat.label}`}
             >
-              <CatStage size="sm" className="!rounded-2xl shadow-none">
+              <CatStage size="sm" className="w-full border-0! bg-transparent shadow-none">
                 <Mascot
                   size={96}
                   state="idle"
@@ -55,23 +63,21 @@ export function SpecialCats() {
                   title={cat.label}
                 />
               </CatStage>
-              <p className="font-heading mt-3 text-center text-base font-bold">
+              <p className="font-heading mt-4 text-center text-sm font-medium tracking-wide">
                 {cat.label}
               </p>
             </PressArea>
-            <div className="mt-2 flex justify-center">
+            <div className="mt-3 flex justify-center">
               <Button
                 size="sm"
-                variant="secondary"
+                variant="ghost"
                 onClick={() => {
                   const added = toggle(cat.id, cat.label);
                   toast(added ? copy.toast.favorited : copy.toast.unfavorited);
                 }}
               >
                 <Heart
-                  className={cn(
-                    has(cat.id) && "fill-destructive text-destructive",
-                  )}
+                  className={cn(has(cat.id) && "fill-primary text-primary")}
                 />
                 {has(cat.id) ? copy.card.unfavorite : copy.card.favorite}
               </Button>

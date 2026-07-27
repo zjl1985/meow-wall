@@ -55,24 +55,12 @@ export interface MascotProps {
 
 function renderDecoration(state: MascotState, p: MascotPalette) {
   if (state === "thinking") {
+    // 像素省略号，不用 emoji
     return (
       <g className="ah-cat-think">
-        <rect x="44" y="2" width="16" height="2" fill={p.ink} />
-        <rect x="42" y="4" width="2" height="12" fill={p.ink} />
-        <rect x="60" y="4" width="2" height="12" fill={p.ink} />
-        <rect x="44" y="16" width="12" height="2" fill={p.ink} />
-        <rect x="54" y="18" width="2" height="2" fill={p.ink} />
-        <rect x="56" y="20" width="2" height="2" fill={p.ink} />
-        <rect x="44" y="4" width="16" height="12" fill={p.white} />
-        <text
-          x="52"
-          y="13"
-          textAnchor="middle"
-          fontSize="9"
-          fontFamily={'"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'}
-        >
-          💬
-        </text>
+        <rect x="46" y="8" width="2" height="2" fill={p.ink} />
+        <rect x="51" y="6" width="2" height="2" fill={p.ink} />
+        <rect x="56" y="4" width="2" height="2" fill={p.ink} />
       </g>
     );
   }

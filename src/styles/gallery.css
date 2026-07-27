@@ -1,0 +1,112 @@
+/* 作品集画廊视觉：深底、锐利边线、克制动效。禁止粘土厚阴影与弹跳旋转。 */
+
+@layer base {
+  body {
+    background:
+      radial-gradient(80rem 40rem at 80% -20%, oklch(0.28 0.04 80 / 0.35), transparent 60%),
+      linear-gradient(180deg, oklch(0.16 0.01 80), oklch(0.12 0.01 80));
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: oklch(0.82 0.16 85 / 0.35);
+  }
+}
+
+@utility gallery-frame {
+  background: oklch(0.18 0.01 80);
+  border: 1px solid oklch(1 0 0 / 0.1);
+  border-radius: var(--radius-lg);
+}
+
+@utility gallery-panel {
+  background: oklch(0.17 0.01 80 / 0.92);
+  border: 1px solid oklch(1 0 0 / 0.08);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px);
+}
+
+@utility gallery-lift {
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 280ms ease,
+    background-color 280ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: oklch(1 0 0 / 0.22);
+  }
+}
+
+@utility gallery-enter {
+  animation: gallery-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes gallery-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility pixel-stage {
+  background:
+    linear-gradient(180deg, oklch(0.2 0.01 80), oklch(0.15 0.01 80));
+}
+
+@utility pixel-grid {
+  background-image:
+    linear-gradient(oklch(1 0 0 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(1 0 0 / 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+  mask-image: radial-gradient(circle at 50% 50%, black 28%, transparent 75%);
+}
+
+@utility pixel-glow {
+  background: oklch(0.78 0.14 85 / 0.22);
+}
+
+@keyframes gallery-parade {
+  from {
+    transform: translateX(-14vw);
+  }
+  to {
+    transform: translateX(114vw);
+  }
+}
+
+@utility gallery-parade {
+  animation: gallery-parade 4.8s linear forwards;
+}
+
+@keyframes gallery-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@utility gallery-bob {
+  animation: gallery-bob 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-lift,
+  .gallery-enter,
+  .gallery-parade,
+  .gallery-bob {
+    animation: none;
+    transition: none;
+  }
+
+  .gallery-lift:hover {
+    transform: none;
+  }
+}

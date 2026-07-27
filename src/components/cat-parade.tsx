@@ -11,7 +11,7 @@ interface CatParadeProps {
   onDone: () => void;
 }
 
-/** 彩蛋：专属像素猫横穿屏幕，不再用 emoji */
+/** 彩蛋：专属像素猫横穿屏幕 */
 export function CatParade({ onDone }: CatParadeProps) {
   const cats: CatHead[] = listSpecialCats();
 
@@ -24,12 +24,12 @@ export function CatParade({ onDone }: CatParadeProps) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex items-end gap-8"
+      className="pointer-events-none fixed inset-x-0 bottom-8 z-50 flex items-end gap-10"
     >
       {cats.map((cat, index) => (
         <div
           key={cat.id}
-          className="clay-parade pixel-bob flex flex-col items-center"
+          className="gallery-parade gallery-bob flex flex-col items-center"
           style={{ animationDelay: `${index * 180}ms` }}
         >
           <Mascot
@@ -40,7 +40,7 @@ export function CatParade({ onDone }: CatParadeProps) {
             accessories={cat.accessories}
             title={cat.label}
           />
-          <span className="font-heading mt-1 rounded-full bg-white/90 px-2 text-xs font-bold shadow">
+          <span className="mt-2 font-mono text-[10px] tracking-[0.2em] uppercase">
             {cat.label}
           </span>
         </div>

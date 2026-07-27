@@ -68,10 +68,12 @@ export default function StudioPage() {
   );
 
   return (
-    <div className="flex flex-col gap-8 py-8">
-      <header className="max-w-2xl">
-        <p className="text-primary text-xs font-bold tracking-[0.2em]">STUDIO</p>
-        <h1 className="font-heading clay-text-shadow mt-1 text-4xl font-extrabold">
+    <div className="flex flex-col gap-10 py-12">
+      <header className="max-w-2xl border-b border-white/10 pb-8">
+        <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
+          Workshop
+        </p>
+        <h1 className="font-heading mt-2 text-4xl font-semibold tracking-tight md:text-5xl">
           {copy.studio.title}
         </h1>
         <p className="text-muted-foreground mt-2 text-sm">{copy.studio.subtitle}</p>
@@ -84,11 +86,11 @@ export default function StudioPage() {
             state={draft.state}
             palette={draft.palette}
             accessories={draft.accessories}
-            title={draft.label || "我的猫"}
+            title={draft.label || "custom"}
           />
         </CatStage>
 
-        <div className="clay-surface flex flex-col gap-6 p-6">
+        <div className="gallery-panel flex flex-col gap-6 p-6">
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold">{copy.studio.name}</label>
             <Input

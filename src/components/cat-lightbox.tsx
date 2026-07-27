@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import { Mascot } from "@/components/mascot/mascot";
 import { CatStage } from "@/components/cat-stage";
+import { Mascot } from "@/components/mascot/mascot";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { MASCOT_STATES, type CatHead, type MascotState } from "@/lib/cats";
@@ -32,7 +32,7 @@ export function CatLightbox({ cat, onClose }: CatLightboxProps) {
           {cat?.label ?? copy.card.preview}
         </DialogTitle>
         {cat && (
-          <div className="clay-surface flex flex-col items-center gap-6 p-6">
+          <div className="gallery-panel flex flex-col items-center gap-6 p-6">
             <CatStage size="lg" className="w-full">
               <Mascot
                 size={220}
@@ -44,8 +44,10 @@ export function CatLightbox({ cat, onClose }: CatLightboxProps) {
               />
             </CatStage>
             <div className="text-center">
-              <p className="font-heading text-2xl font-extrabold">{cat.label}</p>
-              <p className="text-muted-foreground mt-1 text-sm">
+              <p className="font-heading text-2xl font-semibold tracking-tight">
+                {cat.label}
+              </p>
+              <p className="text-muted-foreground mt-1 font-mono text-xs tracking-widest uppercase">
                 {copy.state[state]}
               </p>
             </div>

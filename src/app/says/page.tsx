@@ -35,15 +35,20 @@ export default function SaysPage() {
   const isFavorite = has(cat.id);
 
   return (
-    <div className="flex flex-col gap-8 py-10">
-      <header className="text-center">
-        <h1 className="font-heading clay-text-shadow text-4xl font-extrabold">
+    <div className="flex flex-col gap-10 py-12">
+      <header className="border-b border-white/10 pb-8">
+        <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
+          Dialogue
+        </p>
+        <h1 className="font-heading mt-2 text-4xl font-semibold tracking-tight md:text-5xl">
           {copy.says.title}
         </h1>
-        <p className="text-muted-foreground mt-2 text-sm">{copy.says.subtitle}</p>
+        <p className="text-muted-foreground mt-2 max-w-lg text-sm">
+          {copy.says.subtitle}
+        </p>
       </header>
 
-      <div className="clay-surface mx-auto flex w-full max-w-xl flex-col gap-4 p-6">
+      <div className="gallery-panel mx-auto flex w-full max-w-xl flex-col gap-4 p-6">
         <div className="flex items-center gap-3">
           <Input
             value={text}
@@ -88,14 +93,14 @@ export default function SaysPage() {
       </div>
 
       <CatStage size="lg" className="mx-auto w-full max-w-xl">
-        <div className="relative flex flex-col items-center gap-4 pt-8">
+        <div className="relative flex flex-col items-center gap-4 pt-10">
           {spoken ? (
-            <div className="clay-enter absolute -top-2 left-1/2 z-10 max-w-[14rem] -translate-x-1/2 rounded-2xl border-2 border-[oklch(0.26_0.04_45)] bg-white px-4 py-2 text-center text-sm font-semibold shadow-[0_4px_0_oklch(0.75_0.09_55_/_0.25)]">
+            <div className="gallery-enter absolute -top-1 left-1/2 z-10 max-w-[14rem] -translate-x-1/2 border border-white/20 bg-[oklch(0.18_0.01_80)] px-4 py-2 text-center text-sm font-medium">
               {spoken}
-              <span className="absolute -bottom-2 left-1/2 size-3 -translate-x-1/2 rotate-45 border-r-2 border-b-2 border-[oklch(0.26_0.04_45)] bg-white" />
+              <span className="absolute -bottom-1.5 left-1/2 size-3 -translate-x-1/2 rotate-45 border-r border-b border-white/20 bg-[oklch(0.18_0.01_80)]" />
             </div>
           ) : (
-            <p className="text-muted-foreground absolute -top-2 text-sm">
+            <p className="text-muted-foreground absolute -top-1 font-mono text-xs tracking-widest uppercase">
               {copy.says.empty}
             </p>
           )}
@@ -107,13 +112,15 @@ export default function SaysPage() {
             accessories={cat.accessories}
             title={cat.label}
           />
-          <p className="font-heading text-lg font-bold">{cat.label}</p>
+          <p className="font-heading text-base font-medium tracking-wide">
+            {cat.label}
+          </p>
         </div>
       </CatStage>
 
       <div className="flex justify-center gap-3">
         <Button
-          variant="secondary"
+          variant="outline"
           onClick={() => {
             setCat((prev) => pickRandomCat(pool, prev.id));
             setSpoken(null);
@@ -129,9 +136,7 @@ export default function SaysPage() {
             toast(added ? copy.toast.favorited : copy.toast.unfavorited);
           }}
         >
-          <Heart
-            className={cn(isFavorite && "fill-destructive text-destructive")}
-          />
+          <Heart className={cn(isFavorite && "fill-primary text-primary")} />
           {isFavorite ? copy.card.unfavorite : copy.card.favorite}
         </Button>
       </div>
