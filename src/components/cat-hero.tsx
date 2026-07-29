@@ -7,12 +7,14 @@ import { toast } from "sonner";
 
 import { CatParade } from "@/components/cat-parade";
 import { CatStage } from "@/components/cat-stage";
+import { HeroSpecialEffect } from "@/components/hero-special-effect";
 import { Mascot } from "@/components/mascot/mascot";
 import { Button } from "@/components/ui/button";
 import { useRandomCat } from "@/hooks/use-cats";
 import { useFavorites } from "@/hooks/use-favorites";
 import { useCopy } from "@/hooks/use-copy";
 import { playMeow } from "@/lib/meow";
+import { getHeroSpecialEffect } from "@/lib/special-effects";
 import { cn } from "@/lib/utils";
 
 const PARADE_AT = 10;
@@ -26,6 +28,7 @@ export function CatHero() {
   const showParade =
     rollCount > 0 && rollCount % PARADE_AT === 0 && paradedAt !== rollCount;
   const isFavorite = has(cat.id);
+  const specialEffect = rollCount > 0 ? getHeroSpecialEffect(cat.id) : null;
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -111,23 +114,42 @@ export function CatHero() {
         type="button"
         onClick={roll}
         aria-label={`${copy.hero.tapCat}：${cat.label}`}
-        className="press-feedback order-1 block w-full cursor-pointer rounded-[var(--radius-lg)] text-left focus-visible:ring-3 focus-visible:ring-ring/45 focus-visible:outline-none lg:order-2"
+        className="press-feedback relative order-1 block w-full cursor-pointer overflow-hidden rounded-[var(--radius-lg)] text-left focus-visible:ring-3 focus-visible:ring-ring/45 focus-visible:outline-none lg:order-2"
       >
-        <CatStage size="xl" className="min-h-[19rem] w-full sm:min-h-[24rem]">
+        <CatStage
+          size="xl"
+          className={cn(
+            "min-h-[19rem] w-full sm:min-h-[24rem]",
+            specialEffect && `hero-stage--${specialEffect}`,
+          )}
+        >
           <span className="absolute top-4 right-4 z-20 rounded-full border border-primary/15 bg-card/80 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm backdrop-blur">
             {copy.hero.tapCat} ↻
           </span>
-          <Mascot
-            key={`${cat.id}-${state}-${rollCount}`}
-            size={256}
-            state={state}
-            palette={cat.palette}
-            markings={cat.markings}
-            accessories={cat.accessories}
-            title={cat.label}
-            className="h-auto w-[min(58vw,16rem)]"
-          />
+          <div
+            className={cn(
+              "relative z-10",
+              specialEffect && `hero-cat--${specialEffect}`,
+            )}
+          >
+            <Mascot
+              key={`${cat.id}-${state}-${rollCount}`}
+              size={256}
+              state={state}
+              palette={cat.palette}
+              markings={cat.markings}
+              accessories={cat.accessories}
+              title={cat.label}
+              className="h-auto w-[min(58vw,16rem)]"
+            />
+          </div>
         </CatStage>
+        {specialEffect && (
+          <HeroSpecialEffect
+            key={`${specialEffect}-${rollCount}`}
+            effect={specialEffect}
+          />
+        )}
       </button>
 
       {showParade && <CatParade onDone={() => setParadedAt(rollCount)} />}

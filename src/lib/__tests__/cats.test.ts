@@ -11,6 +11,7 @@ import {
   randomPalette,
   shuffleCats,
 } from "@/lib/cats";
+import { getHeroSpecialEffect } from "@/lib/special-effects";
 
 describe("pixel art geometry", () => {
   it("基础猫猫头始终是完整的 32×32 网格", () => {
@@ -20,6 +21,13 @@ describe("pixel art geometry", () => {
 });
 
 describe("builtin / special cats", () => {
+  it("只有 Nicole 和 Zero 会触发首页专属特效", () => {
+    expect(getHeroSpecialEffect("nicole")).toBe("nicole");
+    expect(getHeroSpecialEffect("zero")).toBe("zero");
+    expect(getHeroSpecialEffect("simon")).toBeNull();
+    expect(getHeroSpecialEffect("orange")).toBeNull();
+  });
+
   it("内置猫数量充足且 id 唯一", () => {
     const cats = listBuiltinCats();
     expect(cats.length).toBeGreaterThanOrEqual(20);

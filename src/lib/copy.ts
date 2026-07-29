@@ -123,6 +123,8 @@ export const copyEn = {
   easterEgg: {
     sound: "Meow",
     parade: "Special cats on parade",
+    nicole: "Nicole mode: hearts online",
+    zero: "Zero signal detected",
     awayTitle: "come back...",
   },
   state: {
@@ -263,6 +265,8 @@ export const copyZh = {
   easterEgg: {
     sound: "喵一声",
     parade: "特别猫猫出巡",
+    nicole: "Nicole 模式：心动上线",
+    zero: "检测到 Zero 信号",
     awayTitle: "回来看看猫...",
   },
   state: {
