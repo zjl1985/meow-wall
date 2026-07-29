@@ -2,6 +2,8 @@
 
 [中文说明](#中文说明)
 
+[![Meow Wall — pixel cat gallery and studio](./public/og.png)](https://meow-wall.vercel.app)
+
 A wonderfully useless wall of pixel cat heads, made purely for fun. No accounts, no database, and no external cat-image feed.
 
 Live site: <https://meow-wall.vercel.app>
