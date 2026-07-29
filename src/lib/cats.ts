@@ -23,6 +23,10 @@ export const MASCOT_STATES: readonly MascotState[] = [
   "error",
   "sleeping",
   "angry",
+  "wink",
+  "surprised",
+  "love",
+  "sad",
 ] as const;
 
 export const PALETTE_SLOTS = [
@@ -44,6 +48,7 @@ export interface CatHead {
   palette: MascotPalette;
   accessories?: readonly MascotAccessory[];
   markings?: Overlay;
+  state?: MascotState;
   kind: "builtin" | "special" | "custom";
 }
 

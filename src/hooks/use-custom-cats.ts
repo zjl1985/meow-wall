@@ -2,8 +2,13 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-import type { MascotAccessory, MascotPalette } from "@/components/mascot/mascot-art";
+import type {
+  MascotAccessory,
+  MascotPalette,
+  MascotState,
+} from "@/components/mascot/mascot-art";
 import type { CatHead } from "@/lib/cats";
+import { MASCOT_STATES } from "@/lib/cats";
 
 const STORAGE_KEY = "meow-wall:custom-cats";
 const SYNC_EVENT = "meow-wall:custom-cats-changed";
@@ -44,12 +49,18 @@ function parse(raw: string | null): CatHead[] {
             (value): value is MascotAccessory => typeof value === "string",
           ) as MascotAccessory[])
         : [];
+      const state =
+        typeof record.state === "string" &&
+        (MASCOT_STATES as readonly string[]).includes(record.state)
+          ? (record.state as MascotState)
+          : "idle";
       return [
         {
           id: record.id,
           label: record.label,
           palette: record.palette,
           accessories,
+          state,
           kind: "custom",
         },
       ];
@@ -94,12 +105,14 @@ export function useCustomCats() {
       label: string;
       palette: MascotPalette;
       accessories: readonly MascotAccessory[];
+      state?: MascotState;
     }) => {
       const cat: CatHead = {
         id: `custom-${crypto.randomUUID()}`,
         label: input.label.trim() || "Untitled Cat",
         palette: input.palette,
         accessories: [...input.accessories],
+        state: input.state ?? "idle",
         kind: "custom",
       };
       write([cat, ...getSnapshot()]);

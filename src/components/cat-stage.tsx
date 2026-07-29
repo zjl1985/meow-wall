@@ -9,10 +9,10 @@ interface CatStageProps {
 }
 
 const SIZE = {
-  sm: "min-h-36 p-4",
+  sm: "min-h-32 p-3 sm:min-h-36 sm:p-4",
   md: "min-h-48 p-6",
   lg: "min-h-64 p-8",
-  xl: "min-h-[22rem] p-10",
+  xl: "min-h-[20rem] p-6 sm:min-h-[22rem] sm:p-10",
 } as const;
 
 /** 画廊展台：像素网格底，锐利边框 */

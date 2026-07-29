@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Dices, Heart, Volume2 } from "lucide-react";
+import { Dices, Heart, Sparkles, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -11,13 +11,14 @@ import { Mascot } from "@/components/mascot/mascot";
 import { Button } from "@/components/ui/button";
 import { useRandomCat } from "@/hooks/use-cats";
 import { useFavorites } from "@/hooks/use-favorites";
-import { copy } from "@/lib/copy";
+import { useCopy } from "@/hooks/use-copy";
 import { playMeow } from "@/lib/meow";
 import { cn } from "@/lib/utils";
 
 const PARADE_AT = 10;
 
 export function CatHero() {
+  const copy = useCopy();
   const { cat, state, roll, rollCount } = useRandomCat();
   const { has, toggle } = useFavorites();
   const [paradedAt, setParadedAt] = useState(0);
@@ -40,26 +41,27 @@ export function CatHero() {
   }, [roll]);
 
   return (
-    <section className="gallery-enter grid items-end gap-10 border-b border-white/10 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:py-16">
-      <div className="flex flex-col gap-6">
+    <section className="section-rule gallery-enter grid items-center gap-7 border-b py-8 md:gap-10 md:py-14 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16 lg:py-16">
+      <div className="order-2 flex flex-col gap-5 lg:order-1">
         <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
           {copy.hero.eyebrow}
         </p>
-        <h1 className="font-heading text-5xl leading-[0.95] font-semibold tracking-tight md:text-7xl">
+        <h1 className="font-heading max-w-xl text-[2.75rem] leading-[0.98] font-bold tracking-[-0.045em] text-balance sm:text-6xl md:text-7xl">
           {copy.hero.title}
         </h1>
-        <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
+        <p className="text-muted-foreground max-w-md text-sm leading-relaxed md:text-base">
           {copy.hero.hint}
         </p>
 
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          <Button size="lg" onClick={roll}>
+        <div className="grid grid-cols-2 gap-2 pt-1 sm:flex sm:flex-wrap sm:items-center">
+          <Button size="lg" onClick={roll} className="w-full sm:w-auto">
             <Dices />
             {copy.hero.roll}
           </Button>
           <Button
             size="lg"
             variant="secondary"
+            className="w-full sm:w-auto"
             onClick={() => {
               const added = toggle(cat.id, cat.label);
               toast(added ? copy.toast.favorited : copy.toast.unfavorited);
@@ -75,15 +77,19 @@ export function CatHero() {
             variant="ghost"
             aria-label={copy.easterEgg.sound}
             onClick={playMeow}
+            className="sm:px-4"
           >
             <Volume2 />
+            <span className="sm:hidden">{copy.easterEgg.sound}</span>
           </Button>
           <Button
             size="lg"
             variant="outline"
             render={<Link href="/studio" />}
             nativeButton={false}
+            className="w-full sm:w-auto"
           >
+            <Sparkles />
             {copy.hero.makeOne}
           </Button>
         </div>
@@ -101,17 +107,28 @@ export function CatHero() {
         </div>
       </div>
 
-      <CatStage size="xl" className="w-full">
-        <Mascot
-          key={`${cat.id}-${state}-${rollCount}`}
-          size={256}
-          state={state}
-          palette={cat.palette}
-          markings={cat.markings}
-          accessories={cat.accessories}
-          title={cat.label}
-        />
-      </CatStage>
+      <button
+        type="button"
+        onClick={roll}
+        aria-label={`${copy.hero.tapCat}：${cat.label}`}
+        className="press-feedback order-1 block w-full cursor-pointer rounded-[var(--radius-lg)] text-left focus-visible:ring-3 focus-visible:ring-ring/45 focus-visible:outline-none lg:order-2"
+      >
+        <CatStage size="xl" className="min-h-[19rem] w-full sm:min-h-[24rem]">
+          <span className="absolute top-4 right-4 z-20 rounded-full border border-primary/15 bg-card/80 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm backdrop-blur">
+            {copy.hero.tapCat} ↻
+          </span>
+          <Mascot
+            key={`${cat.id}-${state}-${rollCount}`}
+            size={256}
+            state={state}
+            palette={cat.palette}
+            markings={cat.markings}
+            accessories={cat.accessories}
+            title={cat.label}
+            className="h-auto w-[min(58vw,16rem)]"
+          />
+        </CatStage>
+      </button>
 
       {showParade && <CatParade onDone={() => setParadedAt(rollCount)} />}
     </section>

@@ -2,10 +2,11 @@
 
 import { useEffect } from "react";
 
-import { copy } from "@/lib/copy";
+import { useCopy } from "@/hooks/use-copy";
 
 /** 彩蛋：切走标签页时把标题换成召唤语 */
 export function AwayTitle() {
+  const copy = useCopy();
   useEffect(() => {
     const original = document.title;
     const onVisibilityChange = () => {
@@ -16,7 +17,7 @@ export function AwayTitle() {
       document.removeEventListener("visibilitychange", onVisibilityChange);
       document.title = original;
     };
-  }, []);
+  }, [copy.easterEgg.awayTitle]);
 
   return null;
 }

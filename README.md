@@ -1,49 +1,97 @@
-# 喵喵墙 meow-wall
+# Meow Wall
 
-一个只做一件事的网站：展示 agent-hub 同款**像素猫猫头**。纯好玩，没有登录、没有数据库、不拉外网猫图。
+[中文说明](#中文说明)
 
-线上地址：<https://meow-wall.vercel.app>
+A wonderfully useless wall of pixel cat heads, made purely for fun. No accounts, no database, and no external cat-image feed.
 
-## 有什么
+Live site: <https://meow-wall.vercel.app>
 
-- **猫墙**（`/`）：Hero + **彩蛋专属区**（Nicole / Goodman / Simon / Zero）+ 全皮肤墙
-- **捏猫**（`/studio`）：调色 / 配饰 / 表情，随机生成，存进本地猫墙，可导出 SVG
-- **猫猫说话**（`/says`）：头顶冒泡
-- **收藏**（`/favorites`）：localStorage
-- **彩蛋游行**：连换 10 只 → 四只专属像素猫横穿屏幕（不是 emoji）
+## What is inside
 
+- **Cat Wall** (`/`): a random featured cat, four special guests, and the full cat archive
+- **Studio** (`/studio`): customize colors, combine 16 accessories, choose from 10 expressions, save locally, and export SVG
+- **Cat Says** (`/says`): give a cat a speech bubble
+- **Saved Cats** (`/favorites`): browser-local favorites
+- **Secret Parade**: roll 10 cats to send the four special cats across the screen
+- **English / 中文**: English by default, with a persistent language switch
 
-## 技术栈
+Custom cats and language preferences stay in the browser through `localStorage`.
 
-Next.js 16 App Router · React 19 · TypeScript strict · Tailwind v4 · shadcn/ui
+## Tech stack
 
-## 部署到 Vercel
+Next.js 16 App Router · React 19 · strict TypeScript · Tailwind CSS v4 · shadcn/ui
 
-通过 **GitHub → Vercel** 自动部署，不需要本地 `vercel --prod`。
-
-- 仓库：https://github.com/zjl1985/meow-wall
-- 生产域名：https://meow-wall.vercel.app
-- 生产分支：`main`（push 即触发 Production）
-- 不需要任何环境变量，也没有数据库
-
-```bash
-git push origin main   # 自动部署
-```
-
-本机若开了 7897 代理，偶尔用 CLI 查部署状态时先清掉代理变量（CLI 对 `ALL_PROXY` 有 bug）：
-
-```bash
-env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx vercel ls
-```
-
-## 开发
+## Development
 
 ```bash
 pnpm install
-pnpm dev          # http://localhost:3000
+pnpm dev
 
 pnpm lint
 pnpm typecheck
 pnpm test
 pnpm test:e2e:smoke
 ```
+
+## Deployment
+
+The site deploys automatically from GitHub to Vercel. Pushing the `main` branch triggers a production deployment.
+
+- Repository: <https://github.com/zjl1985/meow-wall>
+- Production: <https://meow-wall.vercel.app>
+- Environment variables: none
+- Database: none
+
+```bash
+git push origin main
+```
+
+If a local proxy on port `7897` interferes with the Vercel CLI, clear the proxy variables for that command:
+
+```bash
+env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx vercel ls
+```
+
+---
+
+## 中文说明
+
+一面没什么用、但很快乐的像素猫猫头墙。纯好玩，没有登录、没有数据库，也不会从外网拉猫图。
+
+线上地址：<https://meow-wall.vercel.app>
+
+### 有什么
+
+- **猫墙**（`/`）：随机今日猫猫、四只特别来宾和完整猫猫档案
+- **捏猫**（`/studio`）：调色、组合 16 种配饰、切换 10 种表情、保存到本地并导出 SVG
+- **猫猫说话**（`/says`）：让猫猫头顶冒泡
+- **收藏**（`/favorites`）：保存在浏览器本地
+- **彩蛋游行**：连续换 10 只猫，四只特别猫会横穿屏幕
+- **English / 中文**：默认英文，可随时切换并记住选择
+
+自定义猫猫和语言偏好都只保存在浏览器的 `localStorage` 中。
+
+### 技术栈
+
+Next.js 16 App Router · React 19 · TypeScript strict · Tailwind CSS v4 · shadcn/ui
+
+### 开发
+
+```bash
+pnpm install
+pnpm dev
+
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm test:e2e:smoke
+```
+
+### 部署
+
+项目通过 GitHub 自动部署到 Vercel。推送 `main` 分支就会触发生产部署。
+
+- 仓库：<https://github.com/zjl1985/meow-wall>
+- 生产地址：<https://meow-wall.vercel.app>
+- 环境变量：无
+- 数据库：无

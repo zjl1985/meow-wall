@@ -10,12 +10,13 @@ import { Mascot } from "@/components/mascot/mascot";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCustomCats } from "@/hooks/use-custom-cats";
+import { useCopy } from "@/hooks/use-copy";
 import { useFavorites } from "@/hooks/use-favorites";
 import { getBuiltinCat } from "@/lib/cats";
-import { copy } from "@/lib/copy";
 import { DEFAULT_PALETTE } from "@/components/mascot/mascot-art";
 
 export default function FavoritesPage() {
+  const copy = useCopy();
   const { favorites, isHydrated, clear } = useFavorites();
   const { customs } = useCustomCats();
 
@@ -29,8 +30,8 @@ export default function FavoritesPage() {
   }, [favorites, customs]);
 
   return (
-    <div className="flex flex-col gap-10 py-12">
-      <header className="flex items-end justify-between gap-4 border-b border-white/10 pb-8">
+    <div className="flex flex-col gap-7 py-7 md:gap-10 md:py-12">
+      <header className="section-rule flex items-end justify-between gap-4 border-b pb-6 md:pb-8">
         <div>
           <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
             Collection
@@ -58,7 +59,7 @@ export default function FavoritesPage() {
       </header>
 
       {!isHydrated && (
-        <div className="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
           {Array.from({ length: 4 }, (_, index) => (
             <Skeleton key={index} className="aspect-square w-full rounded-lg" />
           ))}
@@ -66,7 +67,7 @@ export default function FavoritesPage() {
       )}
 
       {isHydrated && cats.length === 0 && (
-        <div className="gallery-panel flex flex-col items-center gap-5 p-16 text-center">
+        <div className="gallery-panel flex flex-col items-center gap-5 p-8 text-center sm:p-16">
           <Mascot size={96} state="sleeping" palette={DEFAULT_PALETTE} title="empty" />
           <p className="font-heading text-xl font-semibold">{copy.favorites.empty}</p>
           <p className="text-muted-foreground text-sm">{copy.favorites.emptyHint}</p>

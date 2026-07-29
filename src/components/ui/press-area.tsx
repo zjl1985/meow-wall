@@ -12,7 +12,7 @@ export function PressArea({ className, ...props }: ComponentProps<"button">) {
       type="button"
       data-slot="press-area"
       className={cn(
-        "cursor-pointer focus-visible:ring-ring/60 focus-visible:outline-none focus-visible:ring-[3px]",
+        "cursor-pointer touch-manipulation transition-transform duration-150 ease-out focus-visible:ring-ring/45 focus-visible:outline-none focus-visible:ring-[3px] active:scale-[0.98]",
         className,
       )}
       {...props}

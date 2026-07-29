@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PressArea } from "@/components/ui/press-area";
 import type { CatHead, MascotState } from "@/lib/cats";
-import { copy } from "@/lib/copy";
+import { useCopy } from "@/hooks/use-copy";
 import { cn } from "@/lib/utils";
 
 interface CatCardProps {
@@ -21,17 +21,18 @@ interface CatCardProps {
 
 export function CatCard({
   cat,
-  state = "idle",
+  state,
   isFavorite,
   onToggleFavorite,
   onPreview,
 }: CatCardProps) {
+  const copy = useCopy();
   return (
-    <div className="gallery-panel gallery-lift gallery-enter group relative overflow-hidden p-3">
+    <div className="gallery-panel gallery-lift gallery-enter group relative overflow-hidden p-2.5 sm:p-3">
       {cat.kind === "custom" && (
         <Badge
           variant="outline"
-          className="absolute top-3 left-3 z-10 border-white/20 bg-black/30"
+          className="absolute top-3 left-3 z-10 border-primary/15 bg-card/80 text-primary"
         >
           {copy.card.customBadge}
         </Badge>
@@ -39,7 +40,7 @@ export function CatCard({
       {cat.kind === "special" && (
         <Badge
           variant="outline"
-          className="absolute top-3 left-3 z-10 border-white/20 bg-black/30"
+          className="absolute top-3 left-3 z-10 border-primary/15 bg-card/80 text-primary"
         >
           {copy.card.specialBadge}
         </Badge>
@@ -53,7 +54,7 @@ export function CatCard({
         <CatStage size="sm" className="w-full border-0! bg-transparent">
           <Mascot
             size={128}
-            state={state}
+            state={state ?? cat.state ?? "idle"}
             palette={cat.palette}
             markings={cat.markings}
             accessories={cat.accessories}
@@ -65,7 +66,7 @@ export function CatCard({
         </span>
       </PressArea>
 
-      <div className="absolute top-3 right-3 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+      <div className="absolute top-2.5 right-2.5 opacity-100 transition-opacity duration-150 md:top-3 md:right-3 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100">
         <Button
           variant="secondary"
           size="icon"

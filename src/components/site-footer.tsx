@@ -1,10 +1,14 @@
+"use client";
+
 import { GitHubMark } from "@/components/github-mark";
-import { REPO_URL, copy } from "@/lib/copy";
+import { useCopy } from "@/hooks/use-copy";
+import { REPO_URL } from "@/lib/copy";
 
 export function SiteFooter() {
+  const copy = useCopy();
   return (
-    <footer className="border-t border-white/10">
-      <div className="text-muted-foreground mx-auto flex max-w-6xl flex-col gap-3 px-6 py-8 text-xs sm:flex-row sm:items-center sm:justify-between">
+    <footer className="section-rule border-t">
+      <div className="text-muted-foreground mx-auto flex max-w-[1320px] flex-col gap-3 px-4 py-8 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>{copy.site.footer}</p>
         <a
           href={REPO_URL}

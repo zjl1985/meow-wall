@@ -18,9 +18,26 @@ const syne = Syne({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "https://meow-wall.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: `${copy.site.name} · ${copy.site.tagline}`,
   description: copy.site.tagline,
+  openGraph: {
+    title: `${copy.site.name} · Which cat today?`,
+    description: "A wonderfully useless wall of pixel cats, with a studio for making your own.",
+    type: "website",
+    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "Meow Wall pixel cat gallery" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${copy.site.name} · Which cat today?`,
+    description: "A wonderfully useless wall of pixel cats, with a studio for making your own.",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({
@@ -30,17 +47,18 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="zh-CN"
+      lang="en"
+      data-scroll-behavior="smooth"
       className={`${dmSans.variable} ${syne.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="mobile-safe-bottom flex min-h-full flex-col md:pb-0">
         <AwayTitle />
         <SiteNav />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-6 pb-20">
+        <main className="mx-auto w-full max-w-[1320px] flex-1 px-4 pb-14 sm:px-6 md:pb-20">
           {children}
         </main>
         <SiteFooter />
-        <Toaster position="top-center" theme="dark" />
+        <Toaster position="top-center" theme="light" richColors />
       </body>
     </html>
   );

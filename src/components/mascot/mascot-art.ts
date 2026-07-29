@@ -1042,7 +1042,11 @@ export type MascotState =
   | "success"
   | "error"
   | "sleeping"
-  | "angry";
+  | "angry"
+  | "wink"
+  | "surprised"
+  | "love"
+  | "sad";
 
 interface Expression {
   /** Opaque base-colour patches that remove the idle features first. */
@@ -1137,6 +1141,63 @@ export const EXPRESSIONS: Record<MascotState, Expression> = {
       { x: 245, y: 180, w: 35, h: 12, token: "K", eye: true },
     ],
   },
+  wink: {
+    blink: false,
+    clear: [...EYE_CLEAR, ...MUZZLE_CLEAR],
+    details: [
+      ...EXPRESSION_NOSE,
+      { x: 100, y: 180, w: 40, h: 8, token: "K", eye: true },
+      { x: 250, y: 160, w: 35, h: 38, token: "K", eye: true },
+      { x: 260, y: 168, w: 12, h: 12, token: "W", eye: true },
+      { x: 165, y: 210, w: 10, h: 10, token: "K" },
+      { x: 205, y: 210, w: 10, h: 10, token: "K" },
+      { x: 175, y: 220, w: 30, h: 8, token: "K" },
+    ],
+  },
+  surprised: {
+    blink: false,
+    clear: [...EYE_CLEAR, ...MUZZLE_CLEAR],
+    details: [
+      { x: 98, y: 155, w: 42, h: 46, token: "K", eye: true },
+      { x: 108, y: 165, w: 22, h: 26, token: "W", eye: true },
+      { x: 245, y: 155, w: 42, h: 46, token: "K", eye: true },
+      { x: 255, y: 165, w: 22, h: 26, token: "W", eye: true },
+      ...EXPRESSION_NOSE,
+      { x: 175, y: 212, w: 30, h: 24, token: "K" },
+      { x: 183, y: 218, w: 14, h: 12, token: "L" },
+    ],
+  },
+  love: {
+    blink: false,
+    clear: [...EYE_CLEAR, ...MUZZLE_CLEAR],
+    details: [
+      { x: 96, y: 162, w: 18, h: 18, token: "B", eye: true },
+      { x: 122, y: 162, w: 18, h: 18, token: "B", eye: true },
+      { x: 104, y: 178, w: 28, h: 18, token: "B", eye: true },
+      { x: 243, y: 162, w: 18, h: 18, token: "B", eye: true },
+      { x: 269, y: 162, w: 18, h: 18, token: "B", eye: true },
+      { x: 251, y: 178, w: 28, h: 18, token: "B", eye: true },
+      ...EXPRESSION_NOSE,
+      { x: 165, y: 210, w: 10, h: 10, token: "K" },
+      { x: 205, y: 210, w: 10, h: 10, token: "K" },
+      { x: 175, y: 220, w: 30, h: 8, token: "K" },
+    ],
+  },
+  sad: {
+    blink: false,
+    clear: [...EYE_CLEAR, ...MUZZLE_CLEAR],
+    details: [
+      { x: 98, y: 166, w: 38, h: 28, token: "K", eye: true },
+      { x: 106, y: 174, w: 22, h: 12, token: "W", eye: true },
+      { x: 249, y: 166, w: 38, h: 28, token: "K", eye: true },
+      { x: 257, y: 174, w: 22, h: 12, token: "W", eye: true },
+      { x: 280, y: 194, w: 10, h: 22, token: "H" },
+      ...EXPRESSION_NOSE,
+      { x: 175, y: 220, w: 30, h: 8, token: "K" },
+      { x: 168, y: 226, w: 10, h: 8, token: "K" },
+      { x: 202, y: 226, w: 10, h: 8, token: "K" },
+    ],
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -1154,7 +1215,12 @@ export type MascotAccessory =
   | "cap"
   | "headband"
   | "leaf"
-  | "gold-chain";
+  | "gold-chain"
+  | "party-hat"
+  | "wizard-hat"
+  | "mustache"
+  | "eyepatch"
+  | "ribbon";
 
 /**
  * Accessory overlays use the same sparse format but are painted **above**
@@ -1238,6 +1304,37 @@ export const ACCESSORIES: Record<MascotAccessory, Overlay> = {
     25: "..........M.K.M.K.M.K.M.........",
     26: "...........M.K.M.K.M.M..........",
   },
+  "party-hat": {
+    2:  ".................K..............",
+    3:  "................KMK.............",
+    4:  "...............KMMMK............",
+    5:  "..............KMMMMMK...........",
+    6:  ".............KKKKKKKKK..........",
+  },
+  "wizard-hat": {
+    1:  "..................K.............",
+    2:  ".................KK.............",
+    3:  "................KMMK............",
+    4:  "...............KMMMMK...........",
+    5:  ".............KKMMMMMMK..........",
+    6:  "...........KKKKKKKKKKKK.........",
+  },
+  mustache: {
+    21: "............KK....KK............",
+    22: "..........KKKKK..KKKKK..........",
+    23: "...........KKKKKKKKKK...........",
+  },
+  eyepatch: {
+    14: "......KKKKKKKKKK................",
+    15: ".......KKKKKK...................",
+    16: ".......KKKKKK...................",
+    17: "........KKKK....................",
+  },
+  ribbon: {
+    6:  "...KKK.KKK......................",
+    7:  "....KKKKK.......................",
+    8:  "...KKK.KKK......................",
+  },
 };
 
 /**
@@ -1317,6 +1414,35 @@ const REFERENCE_ACCESSORIES: Record<MascotAccessory, readonly FaceDetail[]> = {
     { x: 195, y: 245, w: 15, h: 12, token: "M" },
     { x: 220, y: 255, w: 15, h: 12, token: "M" },
   ],
+  "party-hat": [
+    { x: 190, y: 0, w: 12, h: 12, token: "B" },
+    { x: 178, y: 12, w: 35, h: 18, token: "M" },
+    { x: 163, y: 30, w: 65, h: 18, token: "B" },
+    { x: 150, y: 48, w: 90, h: 12, token: "K" },
+  ],
+  "wizard-hat": [
+    { x: 205, y: 0, w: 20, h: 16, token: "K" },
+    { x: 185, y: 14, w: 50, h: 18, token: "D" },
+    { x: 165, y: 31, w: 80, h: 22, token: "D" },
+    { x: 135, y: 53, w: 145, h: 14, token: "K" },
+    { x: 202, y: 25, w: 12, h: 12, token: "W" },
+  ],
+  mustache: [
+    { x: 135, y: 210, w: 45, h: 14, token: "K" },
+    { x: 205, y: 210, w: 45, h: 14, token: "K" },
+    { x: 120, y: 220, w: 60, h: 14, token: "K" },
+    { x: 205, y: 220, w: 60, h: 14, token: "K" },
+  ],
+  eyepatch: [
+    { x: 70, y: 137, w: 220, h: 10, token: "K" },
+    { x: 88, y: 150, w: 66, h: 58, token: "K" },
+    { x: 99, y: 160, w: 14, h: 10, token: "W" },
+  ],
+  ribbon: [
+    { x: 50, y: 55, w: 30, h: 35, token: "B" },
+    { x: 95, y: 55, w: 30, h: 35, token: "B" },
+    { x: 76, y: 65, w: 25, h: 22, token: "M" },
+  ],
 };
 
 /** State cues placed over opaque sunglasses; the lenses remain fully solid. */
@@ -1358,6 +1484,24 @@ const SUNGLASSES_STATE_MARKERS: Record<MascotState, readonly FaceDetail[]> = {
     { x: 112, y: 173, w: 25, h: 8, token: "W" },
     { x: 250, y: 173, w: 25, h: 8, token: "W" },
     { x: 260, y: 165, w: 30, h: 8, token: "W" },
+  ],
+  wink: [
+    { x: 102, y: 184, w: 32, h: 8, token: "W" },
+    { x: 250, y: 165, w: 26, h: 22, token: "W" },
+  ],
+  surprised: [
+    { x: 103, y: 165, w: 24, h: 24, token: "W" },
+    { x: 250, y: 165, w: 24, h: 24, token: "W" },
+  ],
+  love: [
+    { x: 100, y: 168, w: 16, h: 18, token: "B" },
+    { x: 120, y: 168, w: 16, h: 18, token: "B" },
+    { x: 247, y: 168, w: 16, h: 18, token: "B" },
+    { x: 267, y: 168, w: 16, h: 18, token: "B" },
+  ],
+  sad: [
+    { x: 102, y: 180, w: 30, h: 8, token: "W" },
+    { x: 250, y: 180, w: 30, h: 8, token: "W" },
   ],
 };
 
@@ -1565,6 +1709,8 @@ export interface SvgOptions {
   markings?: Overlay;
   /** Optional props painted above the cat face. */
   accessories?: readonly MascotAccessory[];
+  /** Expression to preserve in exported custom cats. */
+  state?: MascotState;
 }
 
 function rectTag(r: MascotRect, indent: string, withEyeClass: boolean): string {
@@ -1575,7 +1721,7 @@ function rectTag(r: MascotRect, indent: string, withEyeClass: boolean): string {
 /** Render a standalone `.svg` string for a palette (hex-hardcoded). */
 export function toSvg(palette: MascotPalette, opts: SvgOptions): string {
   const rects = buildRects(palette, {
-    state: "idle",
+    state: opts.state ?? "idle",
     accessories: opts.accessories,
     markings: opts.markings,
   });

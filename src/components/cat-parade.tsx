@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { Mascot } from "@/components/mascot/mascot";
 import { listSpecialCats, type CatHead } from "@/lib/cats";
-import { copy } from "@/lib/copy";
+import { useCopy } from "@/hooks/use-copy";
 
 interface CatParadeProps {
   onDone: () => void;
@@ -13,13 +13,14 @@ interface CatParadeProps {
 
 /** 彩蛋：专属像素猫横穿屏幕 */
 export function CatParade({ onDone }: CatParadeProps) {
+  const copy = useCopy();
   const cats: CatHead[] = listSpecialCats();
 
   useEffect(() => {
     toast(copy.easterEgg.parade);
     const timer = window.setTimeout(onDone, 5200);
     return () => window.clearTimeout(timer);
-  }, [onDone]);
+  }, [copy.easterEgg.parade, onDone]);
 
   return (
     <div
