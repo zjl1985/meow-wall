@@ -12,6 +12,8 @@ import {
   shuffleCats,
 } from "@/lib/cats";
 import { getHeroSpecialEffect } from "@/lib/special-effects";
+import { safeFilename } from "@/lib/share-card";
+import { toSvg } from "@/components/mascot/mascot-art";
 
 describe("pixel art geometry", () => {
   it("基础猫猫头始终是完整的 32×32 网格", () => {
@@ -79,5 +81,21 @@ describe("generator helpers", () => {
     expect(getBuiltinCat("orange")?.kind).toBe("builtin");
     expect(getBuiltinCat("zero")?.kind).toBe("special");
     expect(getBuiltinCat("nope")).toBeUndefined();
+  });
+});
+
+describe("exports", () => {
+  it("导出的 SVG 会转义猫名中的 XML 特殊字符", () => {
+    const svg = toSvg(listBuiltinCats()[0]!.palette, {
+      ariaLabel: 'Mew & <Paws> "Jr"',
+    });
+    expect(svg).toContain(
+      'aria-label="Mew &amp; &lt;Paws&gt; &quot;Jr&quot;"',
+    );
+  });
+
+  it("导出文件名会移除路径与系统保留字符", () => {
+    expect(safeFilename('  Cat / \\ : * ? " < > |  ')).toBe("Cat");
+    expect(safeFilename("...", "custom-cat")).toBe("custom-cat");
   });
 });

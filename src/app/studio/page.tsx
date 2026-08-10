@@ -1,14 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Download, Dices, RotateCcw, Save, Sparkles } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Download,
+  Dices,
+  FileDown,
+  Pencil,
+  RotateCcw,
+  Save,
+  Sparkles,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { CatStage } from "@/components/cat-stage";
 import { Mascot } from "@/components/mascot/mascot";
 import { toSvg } from "@/components/mascot/mascot-art";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ColorInput } from "@/components/ui/color-input";
 import { Input } from "@/components/ui/input";
 import { PressArea } from "@/components/ui/press-area";
@@ -25,6 +38,8 @@ import {
   type MascotState,
   type PaletteSlot,
 } from "@/lib/cats";
+import { downloadFile, safeFilename } from "@/lib/share-card";
+import { cn } from "@/lib/utils";
 
 type AccessoryZone = "head" | "face" | "ear" | "neck";
 
@@ -61,7 +76,15 @@ export default function StudioPage() {
   const copy = useCopy();
   const [draft, setDraft] = useState<CustomCatDraft>(() => createEmptyDraft());
   const [savedLabel, setSavedLabel] = useState<string | null>(null);
-  const { save } = useCustomCats();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const { customs, save, update, remove, exportBackup, importBackup } =
+    useCustomCats();
+
+  const resetEditor = () => {
+    setDraft(createEmptyDraft());
+    setEditingId(null);
+    setSavedLabel(null);
+  };
 
   const setPalette = (slot: PaletteSlot, value: string) => {
     setDraft((prev) => ({
@@ -222,7 +245,7 @@ export default function StudioPage() {
             </Button>
             <Button
               variant="secondary"
-              onClick={() => setDraft(createEmptyDraft())}
+              onClick={resetEditor}
               className="w-full sm:w-auto"
             >
               <RotateCcw />
@@ -231,25 +254,39 @@ export default function StudioPage() {
             <Button
               className="w-full sm:w-auto"
               onClick={() => {
-                const cat = save({
+                const input = {
                   label: draft.label,
                   palette: draft.palette,
                   accessories: draft.accessories,
                   state: draft.state,
-                });
+                };
+                const cat = editingId ? update(editingId, input) : save(input);
+                if (!cat) return;
                 setSavedLabel(cat.label);
-                toast.success(copy.toast.customSaved);
+                toast.success(
+                  editingId ? copy.toast.customUpdated : copy.toast.customSaved,
+                );
                 setDraft((prev) => ({ ...prev, label: cat.label }));
               }}
             >
               <Save />
-              {copy.studio.save}
+              {editingId ? copy.studio.update : copy.studio.save}
             </Button>
+            {editingId && (
+              <Button
+                variant="secondary"
+                className="w-full sm:w-auto"
+                onClick={resetEditor}
+              >
+                <X />
+                {copy.studio.cancelEdit}
+              </Button>
+            )}
             <Button
               variant="outline"
               className="w-full sm:w-auto"
               onClick={() => {
-                const slug = draft.label.trim() || "custom-cat";
+                const slug = safeFilename(draft.label, "custom-cat");
                 downloadSvg(`${slug}.svg`, svg);
                 toast(copy.toast.exported);
               }}
@@ -279,6 +316,146 @@ export default function StudioPage() {
           )}
         </div>
       </div>
+
+      <section className="section-rule flex flex-col gap-5 border-t pt-8 md:pt-10">
+        <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <h2 className="font-heading text-2xl font-bold tracking-tight md:text-3xl">
+              {copy.studio.myCats}
+            </h2>
+            <p className="text-muted-foreground mt-1 text-sm">
+              {copy.studio.myCatsHint}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              disabled={customs.length === 0}
+              onClick={() => {
+                const file = new File([exportBackup()], "meow-wall-cats.json", {
+                  type: "application/json",
+                });
+                downloadFile(file);
+                toast(copy.toast.backupExported);
+              }}
+            >
+              <FileDown />
+              {copy.studio.exportBackup}
+            </Button>
+            <label
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "cursor-pointer",
+              )}
+            >
+              <Upload />
+              {copy.studio.importBackup}
+              <input
+                type="file"
+                accept="application/json,.json"
+                className="sr-only"
+                onChange={(event) => {
+                  const input = event.currentTarget;
+                  const file = input.files?.[0];
+                  if (!file) return;
+                  void file
+                    .text()
+                    .then((raw) => {
+                      const count = importBackup(raw);
+                      toast.success(copy.toast.backupImported(count));
+                    })
+                    .catch(() => toast.error(copy.toast.backupInvalid))
+                    .finally(() => {
+                      input.value = "";
+                    });
+                }}
+              />
+            </label>
+          </div>
+        </header>
+
+        {customs.length === 0 ? (
+          <div className="gallery-panel p-8 text-center text-sm text-muted-foreground">
+            {copy.favorites.emptyHint}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {customs.map((cat) => (
+              <div
+                key={cat.id}
+                className="gallery-panel flex items-center gap-3 p-3"
+              >
+                <div className="flex size-24 shrink-0 items-center justify-center rounded-xl bg-secondary/60">
+                  <Mascot
+                    size={86}
+                    palette={cat.palette}
+                    accessories={cat.accessories}
+                    state={cat.state}
+                    title={cat.label}
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-heading font-semibold">{cat.label}</p>
+                  <p className="text-muted-foreground mt-0.5 text-xs">
+                    {copy.state[cat.state ?? "idle"]}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    <Button
+                      size="sm"
+                      variant={editingId === cat.id ? "default" : "outline"}
+                      onClick={() => {
+                        setEditingId(cat.id);
+                        setSavedLabel(null);
+                        setDraft({
+                          label: cat.label,
+                          palette: { ...cat.palette },
+                          accessories: [...(cat.accessories ?? [])],
+                          state: cat.state ?? "idle",
+                        });
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      <Pencil />
+                      {copy.studio.edit}
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="secondary"
+                      aria-label={`${copy.studio.duplicate} ${cat.label}`}
+                      onClick={() => {
+                        save({
+                          label: copy.studio.copyName(cat.label),
+                          palette: cat.palette,
+                          accessories: cat.accessories ?? [],
+                          state: cat.state,
+                        });
+                        toast.success(copy.toast.customDuplicated);
+                      }}
+                    >
+                      <Copy />
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      aria-label={`${copy.studio.delete} ${cat.label}`}
+                      onClick={() => {
+                        if (!window.confirm(copy.studio.confirmDelete(cat.label))) {
+                          return;
+                        }
+                        remove(cat.id);
+                        if (editingId === cat.id) resetEditor();
+                        toast(copy.toast.customDeleted);
+                      }}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

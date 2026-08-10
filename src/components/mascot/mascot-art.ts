@@ -1718,6 +1718,14 @@ function rectTag(r: MascotRect, indent: string, withEyeClass: boolean): string {
   return `${indent}<rect${cls} x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${r.fill}" />`;
 }
 
+function escapeXmlAttribute(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 /** Render a standalone `.svg` string for a palette (hex-hardcoded). */
 export function toSvg(palette: MascotPalette, opts: SvgOptions): string {
   const rects = buildRects(palette, {
@@ -1725,7 +1733,8 @@ export function toSvg(palette: MascotPalette, opts: SvgOptions): string {
     accessories: opts.accessories,
     markings: opts.markings,
   });
-  const open = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MASCOT_VIEWBOX_WIDTH} ${MASCOT_VIEWBOX_HEIGHT}" width="${MASCOT_VIEWBOX_WIDTH}" height="${MASCOT_VIEWBOX_HEIGHT}" role="img" aria-label="${opts.ariaLabel}" shape-rendering="crispEdges">`;
+  const ariaLabel = escapeXmlAttribute(opts.ariaLabel);
+  const open = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MASCOT_VIEWBOX_WIDTH} ${MASCOT_VIEWBOX_HEIGHT}" width="${MASCOT_VIEWBOX_WIDTH}" height="${MASCOT_VIEWBOX_HEIGHT}" role="img" aria-label="${ariaLabel}" shape-rendering="crispEdges">`;
 
   if (opts.animated) {
     const body = rects.map((r) => rectTag(r, "    ", true)).join("\n");

@@ -8,7 +8,7 @@ import type {
   MascotState,
 } from "@/components/mascot/mascot-art";
 import type { CatHead } from "@/lib/cats";
-import { MASCOT_STATES } from "@/lib/cats";
+import { ALL_ACCESSORIES, MASCOT_STATES } from "@/lib/cats";
 
 const STORAGE_KEY = "meow-wall:custom-cats";
 const SYNC_EVENT = "meow-wall:custom-cats-changed";
@@ -32,39 +32,50 @@ function isPalette(value: unknown): value is MascotPalette {
   );
 }
 
+export const CUSTOM_CATS_BACKUP_VERSION = 1;
+
+function parseValue(value: unknown): CatHead[] {
+  const candidate =
+    typeof value === "object" && value !== null && "cats" in value
+      ? (value as { cats?: unknown }).cats
+      : value;
+  if (!Array.isArray(candidate)) return EMPTY;
+  return candidate.flatMap((item): CatHead[] => {
+    if (typeof item !== "object" || item === null) return [];
+    const record = item as Record<string, unknown>;
+    if (typeof record.id !== "string" || typeof record.label !== "string") {
+      return [];
+    }
+    if (!isPalette(record.palette)) return [];
+    const accessories = Array.isArray(record.accessories)
+      ? record.accessories.filter(
+          (value): value is MascotAccessory =>
+            typeof value === "string" &&
+            (ALL_ACCESSORIES as readonly string[]).includes(value),
+        )
+      : [];
+    const state =
+      typeof record.state === "string" &&
+      (MASCOT_STATES as readonly string[]).includes(record.state)
+        ? (record.state as MascotState)
+        : "idle";
+    return [
+      {
+        id: record.id,
+        label: record.label,
+        palette: record.palette,
+        accessories,
+        state,
+        kind: "custom",
+      },
+    ];
+  });
+}
+
 function parse(raw: string | null): CatHead[] {
   if (!raw) return EMPTY;
   try {
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return EMPTY;
-    return parsed.flatMap((item): CatHead[] => {
-      if (typeof item !== "object" || item === null) return [];
-      const record = item as Record<string, unknown>;
-      if (typeof record.id !== "string" || typeof record.label !== "string") {
-        return [];
-      }
-      if (!isPalette(record.palette)) return [];
-      const accessories = Array.isArray(record.accessories)
-        ? (record.accessories.filter(
-            (value): value is MascotAccessory => typeof value === "string",
-          ) as MascotAccessory[])
-        : [];
-      const state =
-        typeof record.state === "string" &&
-        (MASCOT_STATES as readonly string[]).includes(record.state)
-          ? (record.state as MascotState)
-          : "idle";
-      return [
-        {
-          id: record.id,
-          label: record.label,
-          palette: record.palette,
-          accessories,
-          state,
-          kind: "custom",
-        },
-      ];
-    });
+    return parseValue(JSON.parse(raw) as unknown);
   } catch {
     return EMPTY;
   }
@@ -125,12 +136,64 @@ export function useCustomCats() {
     write(getSnapshot().filter((cat) => cat.id !== id));
   }, []);
 
+  const update = useCallback(
+    (
+      id: string,
+      input: {
+        label: string;
+        palette: MascotPalette;
+        accessories: readonly MascotAccessory[];
+        state?: MascotState;
+      },
+    ) => {
+      let updated: CatHead | undefined;
+      write(
+        getSnapshot().map((cat) => {
+          if (cat.id !== id) return cat;
+          updated = {
+            ...cat,
+            label: input.label.trim() || "Untitled Cat",
+            palette: input.palette,
+            accessories: [...input.accessories],
+            state: input.state ?? "idle",
+          };
+          return updated;
+        }),
+      );
+      return updated;
+    },
+    [],
+  );
+
+  const exportBackup = useCallback(() => {
+    return JSON.stringify(
+      { version: CUSTOM_CATS_BACKUP_VERSION, cats: getSnapshot() },
+      null,
+      2,
+    );
+  }, []);
+
+  const importBackup = useCallback((raw: string) => {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(raw) as unknown;
+    } catch {
+      throw new Error("invalid-json");
+    }
+    const imported = parseValue(parsed);
+    if (imported.length === 0) throw new Error("no-cats");
+    const merged = new Map(getSnapshot().map((cat) => [cat.id, cat]));
+    imported.forEach((cat) => merged.set(cat.id, cat));
+    write([...imported, ...[...merged.values()].filter((cat) => !imported.some((item) => item.id === cat.id))]);
+    return imported.length;
+  }, []);
+
   const get = useCallback(
     (id: string) => customs.find((cat) => cat.id === id),
     [customs],
   );
 
-  return { customs, save, remove, get };
+  return { customs, save, update, remove, get, exportBackup, importBackup };
 }
 
 /** 非 hook：给收藏页同步查找用 */

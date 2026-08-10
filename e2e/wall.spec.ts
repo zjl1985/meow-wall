@@ -30,6 +30,42 @@ test("Studio can randomize and save a custom cat", async ({ page }) => {
   await expect(page.getByText("Made by me").first()).toBeVisible();
 });
 
+test("Studio can edit, duplicate, delete, and export custom cats", async ({ page }) => {
+  await page.goto("/studio");
+  await page.getByPlaceholder("e.g. Captain Tuna").fill("Manager Cat");
+  await page.getByRole("button", { name: "Save to wall" }).click();
+
+  await page.getByRole("button", { name: "Edit" }).click();
+  await page.getByPlaceholder("e.g. Captain Tuna").fill("Edited Cat");
+  await page.getByRole("button", { name: "Update cat" }).click();
+  await expect(page.getByText("Edited Cat").last()).toBeVisible();
+
+  await page.getByRole("button", { name: "Duplicate Edited Cat" }).click();
+  await expect(
+    page.getByRole("paragraph").filter({ hasText: "Edited Cat Copy" }),
+  ).toBeVisible();
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export backup" }).click();
+  await expect((await download).suggestedFilename()).toBe("meow-wall-cats.json");
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Delete Edited Cat Copy" }).click();
+  await expect(
+    page.getByRole("paragraph").filter({ hasText: "Edited Cat Copy" }),
+  ).toHaveCount(0);
+});
+
+test("Cat Says downloads a PNG share card", async ({ page }) => {
+  await page.goto("/says");
+  await page.getByPlaceholder("e.g. I need coffee").fill("Ship more cats");
+  await page.getByRole("button", { name: "Say it" }).click();
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download PNG" }).click();
+  await expect((await download).suggestedFilename()).toMatch(/-says\.png$/);
+});
+
 test("a special cat can be saved", async ({ page }) => {
   await page.goto("/");
   await page

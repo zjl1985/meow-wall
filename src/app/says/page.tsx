@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, MessageCircle, Shuffle } from "lucide-react";
+import { Download, Heart, MessageCircle, Share2, Shuffle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -18,6 +18,11 @@ import {
 } from "@/lib/cats";
 import { MAX_SAYS_LENGTH } from "@/lib/copy";
 import { cn } from "@/lib/utils";
+import {
+  createSpeechCardFile,
+  downloadFile,
+  shareFile,
+} from "@/lib/share-card";
 
 export default function SaysPage() {
   const copy = useCopy();
@@ -29,12 +34,37 @@ export default function SaysPage() {
   const [text, setText] = useState("");
   const [spoken, setSpoken] = useState<string | null>(null);
   const [cat, setCat] = useState<CatHead>(() => listBuiltinCats()[0]!);
+  const [isExporting, setIsExporting] = useState(false);
   const { has, toggle } = useFavorites();
 
   const trimmed = text.trim();
   const isTooLong = trimmed.length > MAX_SAYS_LENGTH;
   const canSubmit = trimmed.length > 0 && !isTooLong;
   const isFavorite = has(cat.id);
+
+  const createCard = async (action: "download" | "share") => {
+    if (!spoken || isExporting) return;
+    setIsExporting(true);
+    try {
+      const file = await createSpeechCardFile(cat, spoken);
+      if (action === "download") {
+        downloadFile(file);
+        toast(copy.toast.pngExported);
+      } else {
+        const result = await shareFile(
+          file,
+          copy.says.shareTitle(cat.label),
+          spoken,
+        );
+        toast(result === "shared" ? copy.toast.shared : copy.toast.pngExported);
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      toast.error(copy.toast.shareFailed);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-7 py-7 md:gap-10 md:py-12">
@@ -120,7 +150,7 @@ export default function SaysPage() {
         </div>
       </CatStage>
 
-      <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-center sm:gap-3">
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3">
         <Button
           variant="outline"
           onClick={() => {
@@ -140,6 +170,21 @@ export default function SaysPage() {
         >
           <Heart className={cn(isFavorite && "fill-primary text-primary")} />
           {isFavorite ? copy.card.unfavorite : copy.card.favorite}
+        </Button>
+        <Button
+          variant="outline"
+          disabled={!spoken || isExporting}
+          onClick={() => void createCard("download")}
+        >
+          <Download />
+          {copy.says.downloadPng}
+        </Button>
+        <Button
+          disabled={!spoken || isExporting}
+          onClick={() => void createCard("share")}
+        >
+          <Share2 />
+          {copy.says.share}
         </Button>
       </div>
     </div>
