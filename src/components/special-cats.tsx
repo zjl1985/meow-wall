@@ -26,7 +26,7 @@ export function SpecialCats() {
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
-            Selected / 02
+            {copy.specials.eyebrow}
           </p>
           <h2 className="font-heading mt-2 text-3xl font-bold tracking-tight md:text-4xl">
             {copy.specials.title}
@@ -68,10 +68,11 @@ export function SpecialCats() {
                 {cat.label}
               </p>
             </PressArea>
-            <div className="mt-2 flex justify-center sm:mt-3">
+            <div className="absolute top-2.5 right-2.5 z-10 sm:top-3 sm:right-3">
               <Button
-                size="sm"
-                variant="ghost"
+                size="icon"
+                variant="secondary"
+                aria-label={has(cat.id) ? copy.card.unfavorite : copy.card.favorite}
                 onClick={() => {
                   const added = toggle(cat.id, cat.label);
                   toast(added ? copy.toast.favorited : copy.toast.unfavorited);
@@ -80,7 +81,6 @@ export function SpecialCats() {
                 <Heart
                   className={cn(has(cat.id) && "fill-primary text-primary")}
                 />
-                {has(cat.id) ? copy.card.unfavorite : copy.card.favorite}
               </Button>
             </div>
           </div>

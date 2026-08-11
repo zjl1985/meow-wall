@@ -70,7 +70,7 @@ export default function SaysPage() {
     <div className="flex flex-col gap-7 py-7 md:gap-10 md:py-12">
       <header className="section-rule border-b pb-6 md:pb-8">
         <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
-          Dialogue
+          {copy.says.eyebrow}
         </p>
         <h1 className="font-heading mt-2 text-4xl font-semibold tracking-tight md:text-5xl">
           {copy.says.title}

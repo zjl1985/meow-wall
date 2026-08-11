@@ -34,7 +34,7 @@ export default function FavoritesPage() {
       <header className="section-rule flex items-end justify-between gap-4 border-b pb-6 md:pb-8">
         <div>
           <p className="text-muted-foreground font-mono text-[11px] tracking-[0.28em] uppercase">
-            Collection
+            {copy.favorites.eyebrow}
           </p>
           <h1 className="font-heading mt-2 text-4xl font-semibold tracking-tight md:text-5xl">
             {copy.favorites.title}

@@ -15,7 +15,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { CatStage } from "@/components/cat-stage";
@@ -42,6 +42,7 @@ import { downloadFile, safeFilename } from "@/lib/share-card";
 import { cn } from "@/lib/utils";
 
 type AccessoryZone = "head" | "face" | "ear" | "neck";
+const ACCESSORY_ZONES = ["head", "face", "ear", "neck"] as const;
 
 const ACCESSORY_ZONE: Record<MascotAccessory, AccessoryZone> = {
   sunglasses: "face",
@@ -77,6 +78,9 @@ export default function StudioPage() {
   const [draft, setDraft] = useState<CustomCatDraft>(() => createEmptyDraft());
   const [savedLabel, setSavedLabel] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [accessoryZone, setAccessoryZone] = useState<AccessoryZone | "all">("head");
+  const [showCompactPreview, setShowCompactPreview] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
   const { customs, save, update, remove, exportBackup, importBackup } =
     useCustomCats();
 
@@ -123,8 +127,62 @@ export default function StudioPage() {
     [draft],
   );
 
+  const visibleAccessories = useMemo(
+    () =>
+      accessoryZone === "all"
+        ? ALL_ACCESSORIES
+        : ALL_ACCESSORIES.filter(
+            (accessory) => ACCESSORY_ZONE[accessory] === accessoryZone,
+          ),
+    [accessoryZone],
+  );
+
+  useEffect(() => {
+    const preview = previewRef.current;
+    if (!preview) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return;
+        setShowCompactPreview(
+          !entry.isIntersecting && entry.boundingClientRect.bottom < 72,
+        );
+      },
+      { rootMargin: "-72px 0px 0px" },
+    );
+    observer.observe(preview);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="flex flex-col gap-7 py-7 md:gap-10 md:py-12">
+      {showCompactPreview && (
+        <div
+          aria-hidden="true"
+          className="gallery-panel pointer-events-none fixed top-[4.75rem] right-4 left-4 z-30 flex items-center gap-3 px-3 py-2 shadow-lg lg:hidden"
+        >
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-secondary/70">
+            <Mascot
+              size={54}
+              state={draft.state}
+              palette={draft.palette}
+              accessories={draft.accessories}
+              animated={false}
+              title=""
+            />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-heading text-sm font-semibold">
+              {draft.label || copy.studio.unnamed}
+            </p>
+            <p className="text-muted-foreground text-xs">
+              {copy.state[draft.state]} · {copy.studio.accessoryCount(draft.accessories.length)}
+            </p>
+          </div>
+          <span className="playful-label text-[10px] font-bold tracking-wider uppercase">
+            {copy.studio.livePreview}
+          </span>
+        </div>
+      )}
       <header className="section-rule max-w-2xl border-b pb-6 md:pb-8">
         <p className="playful-label font-mono text-[11px] tracking-[0.28em] uppercase">
           {copy.studio.stats}
@@ -138,7 +196,7 @@ export default function StudioPage() {
       </header>
 
       <div className="grid items-start gap-6 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10 xl:gap-12">
-        <div className="lg:sticky lg:top-24">
+        <div ref={previewRef} className="lg:sticky lg:top-24">
           <CatStage size="xl" className="min-h-[18rem] w-full sm:min-h-[24rem]">
             <span className="absolute top-4 left-4 z-20 rounded-full border border-primary/15 bg-card/80 px-3 py-1.5 text-xs font-semibold text-primary backdrop-blur">
               {copy.state[draft.state]} · {copy.studio.accessoryCount(draft.accessories.length)}
@@ -198,6 +256,37 @@ export default function StudioPage() {
                 {copy.studio.accessoryHint}
               </p>
             </div>
+            <div className="grid grid-cols-5 gap-1 rounded-xl bg-muted/70 p-1">
+              {(
+                [...ACCESSORY_ZONES, "all"] as const
+              ).map((zone) => {
+                const selectedCount =
+                  zone === "all"
+                    ? draft.accessories.length
+                    : draft.accessories.filter(
+                        (accessory) => ACCESSORY_ZONE[accessory] === zone,
+                      ).length;
+                return (
+                  <button
+                    key={zone}
+                    type="button"
+                    aria-pressed={accessoryZone === zone}
+                    onClick={() => setAccessoryZone(zone)}
+                    className={cn(
+                      "relative rounded-lg px-1 py-2 text-[11px] font-semibold transition-colors",
+                      accessoryZone === zone
+                        ? "bg-card text-foreground shadow-sm"
+                        : "text-muted-foreground",
+                    )}
+                  >
+                    {copy.studio.accessoryZones[zone]}
+                    {selectedCount > 0 && (
+                      <span className="absolute top-1 right-1 size-1.5 rounded-full bg-primary" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               <AccessoryChoice
                 label={copy.studio.noneAccessory}
@@ -207,7 +296,7 @@ export default function StudioPage() {
                   setDraft((prev) => ({ ...prev, accessories: [] }))
                 }
               />
-              {ALL_ACCESSORIES.map((accessory) => (
+              {visibleAccessories.map((accessory) => (
                 <AccessoryChoice
                   key={accessory}
                   label={copy.accessory[accessory]}

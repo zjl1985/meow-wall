@@ -27,16 +27,24 @@ export const copyEn = {
     tapCat: "Tap to roll",
   },
   specials: {
+    eyebrow: "Selected / 02",
     title: "Special guests",
     subtitle: "Exclusive cat heads for Nicole · Goodman · Simon · Zero",
   },
   wall: {
+    eyebrow: "Archive / 03",
     title: "Cat archive",
     subtitle: (total: number, custom: number) =>
       custom > 0
         ? `${total} cats · ${custom} made by you`
         : `${total} cats from agent-hub`,
     reshuffle: "Shuffle",
+    searchPlaceholder: "Search cats",
+    filterAll: "All",
+    filterBuiltin: "Cat collection",
+    filterCustom: "Made by me",
+    noResults: "No cats match those filters",
+    clearFilters: "Clear filters",
   },
   card: {
     favorite: "Save",
@@ -54,6 +62,13 @@ export const copyEn = {
     colors: "Colors",
     accessories: "Accessories",
     accessoryHint: "Layer different zones; choosing the same zone replaces the previous prop",
+    accessoryZones: {
+      head: "Head",
+      face: "Face",
+      ear: "Ear",
+      neck: "Neck",
+      all: "All",
+    },
     accessoryCount: (count: number) => `${count} ${count === 1 ? "accessory" : "accessories"}`,
     expression: "Expression",
     randomize: "Random cat",
@@ -106,6 +121,7 @@ export const copyEn = {
     ribbon: "Ribbon",
   },
   says: {
+    eyebrow: "Dialogue",
     title: "Cat says",
     subtitle: "Give a cat a line and watch it appear above their head.",
     placeholder: "e.g. I need coffee",
@@ -119,6 +135,7 @@ export const copyEn = {
     shareTitle: (name: string) => `${name} says…`,
   },
   favorites: {
+    eyebrow: "Collection",
     title: "Saved cats",
     subtitle: (count: number) => `${count} ${count === 1 ? "cat" : "cats"}`,
     clear: "Clear all",
@@ -192,16 +209,24 @@ export const copyZh = {
     tapCat: "点我换猫",
   },
   specials: {
+    eyebrow: "精选 / 02",
     title: "特别来宾",
     subtitle: "Nicole · Goodman · Simon · Zero 的专属猫猫头",
   },
   wall: {
+    eyebrow: "档案 / 03",
     title: "猫猫档案",
     subtitle: (total: number, custom: number) =>
       custom > 0
         ? `共 ${total} 只 · 其中 ${custom} 只是你捏的`
         : `来自 agent-hub 的 ${total} 只猫猫`,
     reshuffle: "打乱",
+    searchPlaceholder: "搜索猫猫",
+    filterAll: "全部",
+    filterBuiltin: "猫猫图鉴",
+    filterCustom: "我捏的",
+    noResults: "没有找到符合条件的猫猫",
+    clearFilters: "清除筛选",
   },
   card: {
     favorite: "收藏",
@@ -219,6 +244,13 @@ export const copyZh = {
     colors: "毛色",
     accessories: "配饰",
     accessoryHint: "不同位置可以叠戴，同一位置会自动替换",
+    accessoryZones: {
+      head: "头顶",
+      face: "脸部",
+      ear: "耳朵",
+      neck: "脖子",
+      all: "全部",
+    },
     accessoryCount: (count: number) => `${count} 件配饰`,
     expression: "表情",
     randomize: "随机一只",
@@ -271,6 +303,7 @@ export const copyZh = {
     ribbon: "蝴蝶结",
   },
   says: {
+    eyebrow: "猫言猫语",
     title: "猫猫说话",
     subtitle: "给猫猫一句台词，它就会出现在头顶。",
     placeholder: "比如：我需要咖啡",
@@ -284,6 +317,7 @@ export const copyZh = {
     shareTitle: (name: string) => `${name} 说……`,
   },
   favorites: {
+    eyebrow: "收藏夹",
     title: "收藏猫猫",
     subtitle: (count: number) => `共 ${count} 只`,
     clear: "清空",
