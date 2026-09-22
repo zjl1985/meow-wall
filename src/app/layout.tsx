@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Syne } from "next/font/google";
 
+import { ThemeProvider } from "@/components/theme-provider";
 import { AwayTitle } from "@/components/away-title";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
@@ -47,18 +48,21 @@ export default function RootLayout({
 }>) {
   return (
     <html
+      suppressHydrationWarning
       lang="en"
       data-scroll-behavior="smooth"
       className={`${dmSans.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="mobile-safe-bottom flex min-h-full flex-col md:pb-0">
-        <AwayTitle />
-        <SiteNav />
-        <main className="mx-auto w-full max-w-[1320px] flex-1 px-4 pb-14 sm:px-6 md:pb-20">
-          {children}
-        </main>
-        <SiteFooter />
-        <Toaster position="top-center" theme="light" richColors />
+        <ThemeProvider>
+          <AwayTitle />
+          <SiteNav />
+          <main className="mx-auto w-full max-w-[1320px] flex-1 px-4 pb-14 sm:px-6 md:pb-20">
+            {children}
+          </main>
+          <SiteFooter />
+          <Toaster position="top-center" />
+        </ThemeProvider>
       </body>
     </html>
   );

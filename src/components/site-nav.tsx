@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemePicker } from "@/components/theme-picker";
 import Link from "next/link";
 import { Cat, Heart, Languages, MessageCircle, Palette } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -33,7 +34,7 @@ export function SiteNav() {
 
   return (
     <>
-      <header className="section-rule sticky top-0 z-40 border-b bg-[oklch(0.985_0.015_86_/_0.78)] backdrop-blur-xl">
+      <header className="section-rule sticky top-0 z-40 border-b bg-background/80 backdrop-blur-xl">
         <nav className="mx-auto flex max-w-[1320px] items-center justify-between gap-5 px-4 py-3 sm:px-6 md:py-4">
           <Link
             href="/"
@@ -76,6 +77,7 @@ export function SiteNav() {
                 </Link>
               );
             })}
+            <ThemePicker />
             <button
               type="button"
               onClick={() => setLocale(nextLocale)}
@@ -97,6 +99,7 @@ export function SiteNav() {
             </a>
           </div>
           <div className="flex items-center gap-1 md:hidden">
+            <ThemePicker />
             <button
               type="button"
               onClick={() => setLocale(nextLocale)}
@@ -120,7 +123,7 @@ export function SiteNav() {
 
       <nav
         aria-label={copy.nav.mobile}
-        className="section-rule fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 grid grid-cols-4 rounded-[1.35rem] border bg-[oklch(0.995_0.008_85_/_0.9)] p-1.5 shadow-[0_12px_36px_oklch(0.35_0.04_35_/_0.16)] backdrop-blur-xl md:hidden"
+        className="section-rule fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 grid grid-cols-4 rounded-[1.35rem] border bg-card/90 p-1.5 shadow-[0_12px_36px_oklch(0.35_0.04_35_/_0.16)] backdrop-blur-xl md:hidden"
       >
         {links.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;

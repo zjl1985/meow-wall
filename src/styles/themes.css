@@ -1,0 +1,136 @@
+/* Official palette: https://rosepinetheme.com/palette/ */
+
+:root[data-theme="rose-pine"] {
+  color-scheme: dark;
+  --background: #191724;
+  --foreground: #e0def4;
+  --card: #1f1d2e;
+  --card-foreground: #e0def4;
+  --popover: #26233a;
+  --popover-foreground: #e0def4;
+  --primary: #ebbcba;
+  --primary-foreground: #191724;
+  --secondary: #26233a;
+  --secondary-foreground: #e0def4;
+  --muted: #1f1d2e;
+  --muted-foreground: #908caa;
+  --accent: #26233a;
+  --accent-foreground: #9ccfd8;
+  --destructive: #eb6f92;
+  --border: color-mix(in srgb, #908caa 30%, #191724);
+  --input: color-mix(in srgb, #908caa 45%, #191724);
+  --ring: #c4a7e7;
+  --chart-1: #ebbcba;
+  --chart-2: #9ccfd8;
+  --chart-3: #f6c177;
+  --chart-4: #c4a7e7;
+  --chart-5: #31748f;
+  --sidebar: #1f1d2e;
+  --sidebar-foreground: #e0def4;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: #191724;
+  --sidebar-accent: #26233a;
+  --sidebar-accent-foreground: #e0def4;
+  --sidebar-border: var(--border);
+  --sidebar-ring: #c4a7e7;
+  --gallery-top: #191724;
+  --gallery-bottom: #191724;
+  --gallery-warm: color-mix(in srgb, #ebbcba 10%, transparent);
+  --gallery-cool: color-mix(in srgb, #31748f 12%, transparent);
+  --gallery-label: #ebbcba;
+  --stage-top: #1f1d2e;
+  --stage-bottom: #26233a;
+  --stage-glow: color-mix(in srgb, #c4a7e7 14%, transparent);
+}
+
+:root[data-theme="rose-pine-moon"] {
+  color-scheme: dark;
+  --background: #232136;
+  --foreground: #e0def4;
+  --card: #2a273f;
+  --card-foreground: #e0def4;
+  --popover: #393552;
+  --popover-foreground: #e0def4;
+  --primary: #ea9a97;
+  --primary-foreground: #232136;
+  --secondary: #393552;
+  --secondary-foreground: #e0def4;
+  --muted: #2a273f;
+  --muted-foreground: #908caa;
+  --accent: #393552;
+  --accent-foreground: #9ccfd8;
+  --destructive: #eb6f92;
+  --border: color-mix(in srgb, #908caa 30%, #232136);
+  --input: color-mix(in srgb, #908caa 45%, #232136);
+  --ring: #c4a7e7;
+  --chart-1: #ea9a97;
+  --chart-2: #9ccfd8;
+  --chart-3: #f6c177;
+  --chart-4: #c4a7e7;
+  --chart-5: #3e8fb0;
+  --sidebar: #2a273f;
+  --sidebar-foreground: #e0def4;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: #232136;
+  --sidebar-accent: #393552;
+  --sidebar-accent-foreground: #e0def4;
+  --sidebar-border: var(--border);
+  --sidebar-ring: #c4a7e7;
+  --gallery-top: #232136;
+  --gallery-bottom: #232136;
+  --gallery-warm: color-mix(in srgb, #ea9a97 10%, transparent);
+  --gallery-cool: color-mix(in srgb, #3e8fb0 12%, transparent);
+  --gallery-label: #ea9a97;
+  --stage-top: #2a273f;
+  --stage-bottom: #393552;
+  --stage-glow: color-mix(in srgb, #c4a7e7 14%, transparent);
+}
+
+:root[data-theme="rose-pine-dawn"] {
+  color-scheme: light;
+  --background: #faf4ed;
+  --foreground: #464261;
+  --card: #fffaf3;
+  --card-foreground: #464261;
+  --popover: #f2e9e1;
+  --popover-foreground: #464261;
+  --primary: #286983;
+  --primary-foreground: #faf4ed;
+  --secondary: #f2e9e1;
+  --secondary-foreground: #464261;
+  --muted: #fffaf3;
+  --muted-foreground: #797593;
+  --accent: #f2e9e1;
+  --accent-foreground: #286983;
+  --destructive: #b4637a;
+  --border: color-mix(in srgb, #797593 30%, #faf4ed);
+  --input: color-mix(in srgb, #797593 45%, #faf4ed);
+  --ring: #907aa9;
+  --chart-1: #d7827e;
+  --chart-2: #56949f;
+  --chart-3: #ea9d34;
+  --chart-4: #907aa9;
+  --chart-5: #286983;
+  --sidebar: #fffaf3;
+  --sidebar-foreground: #464261;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: #faf4ed;
+  --sidebar-accent: #f2e9e1;
+  --sidebar-accent-foreground: #464261;
+  --sidebar-border: var(--border);
+  --sidebar-ring: #907aa9;
+  --gallery-top: #faf4ed;
+  --gallery-bottom: #faf4ed;
+  --gallery-warm: color-mix(in srgb, #d7827e 10%, transparent);
+  --gallery-cool: color-mix(in srgb, #286983 12%, transparent);
+  --gallery-label: #286983;
+  --stage-top: #fffaf3;
+  --stage-bottom: #f2e9e1;
+  --stage-glow: color-mix(in srgb, #907aa9 14%, transparent);
+}
+
+:root[data-theme^="rose-pine"] .hero-stage--nicole,
+:root[data-theme^="rose-pine"] .hero-stage--zero {
+  background: radial-gradient(circle at 50% 44%, var(--stage-glow), transparent 55%), linear-gradient(var(--stage-top), var(--stage-bottom));
+  border-color: var(--ring);
+}
