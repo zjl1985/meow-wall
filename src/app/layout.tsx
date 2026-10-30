@@ -3,6 +3,7 @@ import { DM_Sans, EB_Garamond } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { AwayTitle } from "@/components/away-title";
+import { CrayonFilter } from "@/components/crayon-filter";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { Toaster } from "@/components/ui/sonner";
@@ -56,6 +57,7 @@ export default function RootLayout({
       <body className="mobile-safe-bottom flex min-h-full flex-col md:pb-0">
         <ThemeProvider>
           <AwayTitle />
+          <CrayonFilter />
           <SiteNav />
           <main className="mx-auto w-full max-w-[1320px] flex-1 px-4 pb-14 sm:px-6 md:pb-20">
             {children}

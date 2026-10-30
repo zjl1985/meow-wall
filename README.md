@@ -21,7 +21,7 @@ Live site: <https://meow-wall.vercel.app>
 
 Custom cats and language preferences stay in the browser through `localStorage`.
 
-The whole site uses a quiet paper look: warm off-white paper with a faint grain, muted ink, hairlines, serif headings, no shadows, and only slow fades.
+The whole site uses a quiet paper look: warm off-white paper with a faint grain, muted ink, hairlines, serif headings, no shadows, and only slow fades. Art and headings get a faint colored-pencil (crayon) grain through an SVG filter.
 
 Humble Critters originals live in `art/humble-animals/*.png`; run `node scripts/optimize-humble-animals.mjs` to regenerate the 640px WebP files in `public/humble-animals/`.
 
@@ -85,7 +85,7 @@ env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx v
 
 自定义猫猫和语言偏好都只保存在浏览器的 `localStorage` 中。
 
-全站采用安静的纸张风格：暖白纸面加淡淡纸纹、低对比墨色、细线、衬线标题、没有阴影，只有缓慢的淡入。
+全站采用安静的纸张风格：暖白纸面加淡淡纸纹、低对比墨色、细线、衬线标题、没有阴影，只有缓慢的淡入。插画和标题用 SVG 滤镜加了一层淡淡的彩笔颗粒。
 
 朴实小动物的原图放在 `art/humble-animals/*.png`，运行 `node scripts/optimize-humble-animals.mjs` 会重新生成 `public/humble-animals/` 下 640px 的 WebP。
 

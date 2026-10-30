@@ -126,8 +126,6 @@
   aspect-ratio: 1;
   /* 让图片融进纸面：去掉过白的底，墨色更淡一点 */
   mix-blend-mode: multiply;
-  opacity: 0.9;
-  filter: saturate(0.85) contrast(0.92);
   transition: opacity 1.2s ease;
 }
 
@@ -186,4 +184,22 @@
   .paper-fade {
     animation: none;
   }
+}
+
+/* 彩笔渲染（全站）：插画与标题套上 #crayon 滤镜，颗粒细碎、边缘略毛，整体仍然很淡 */
+.paper-art,
+h1,
+h2,
+.font-heading {
+  filter: url(#crayon);
+}
+
+.paper-art {
+  opacity: 0.92;
+}
+
+h1,
+.font-heading {
+  /* 稍微加点重量，颗粒才看得出来 */
+  font-weight: 500 !important;
 }
