@@ -1,7 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-test("home defaults to English and shows the cat gallery", async ({ page }) => {
+test("home opens on the Humble Critters series", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Humble Critters" })).toBeVisible();
+  for (const name of ["Rabbit", "Chick", "Bear", "Puppy", "Cat"]) {
+    await expect(page.getByRole("img", { name, exact: true })).toBeVisible();
+  }
+  await page.getByRole("button", { name: "切换到中文" }).click();
+  await expect(page.getByRole("heading", { name: "朴实小动物" })).toBeVisible();
+});
+
+test("wall tab shows the cat gallery in English", async ({ page }) => {
+  await page.goto("/wall");
   await expect(page.getByRole("heading", { name: "Which cat today?" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Special guests" })).toBeVisible();
   await expect(
@@ -25,7 +35,7 @@ test("Studio can randomize and save a custom cat", async ({ page }) => {
     )
     .toContain("Test Cat");
 
-  await page.goto("/");
+  await page.goto("/wall");
   await expect(page.getByRole("button", { name: /Open.*Test Cat/ })).toBeVisible();
   await expect(page.getByText("Made by me").first()).toBeVisible();
 });
@@ -67,7 +77,7 @@ test("Cat Says downloads a PNG share card", async ({ page }) => {
 });
 
 test("a special cat can be saved", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/wall");
   await page
     .locator("section")
     .filter({ has: page.getByRole("heading", { name: "Special guests" }) })
@@ -80,7 +90,7 @@ test("a special cat can be saved", async ({ page }) => {
 });
 
 test("language switch persists Chinese preference", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/wall");
   await page.getByRole("button", { name: "切换到中文" }).click();
   await expect(page.getByRole("heading", { name: "今天翻谁的牌？" })).toBeVisible();
 

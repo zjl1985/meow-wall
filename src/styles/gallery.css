@@ -1,10 +1,11 @@
-/* 明亮猫猫玩具箱：轻量层次、清晰按压反馈、克制而有目的的动效。 */
+/* 纸张画廊：纸纹底、细线分隔、几乎没有阴影，只有缓慢的淡入。 */
 
 @layer base {
   body {
     background:
-      radial-gradient(55rem 32rem at 8% -8%, var(--gallery-warm), transparent 62%),
-      radial-gradient(48rem 30rem at 96% 12%, var(--gallery-cool), transparent 62%),
+      var(--paper-grain),
+      radial-gradient(60rem 36rem at 10% -10%, var(--gallery-warm), transparent 65%),
+      radial-gradient(50rem 32rem at 95% 10%, var(--gallery-cool), transparent 65%),
       linear-gradient(180deg, var(--gallery-top), var(--gallery-bottom));
     background-attachment: fixed;
   }
@@ -18,28 +19,26 @@
   background: color-mix(in srgb, var(--card) 88%, transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 12px 32px oklch(0.46 0.07 45 / 0.08);
+  box-shadow: none;
 }
 
 @utility gallery-panel {
   background: color-mix(in srgb, var(--card) 82%, transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 24px oklch(0.46 0.07 45 / 0.065);
-  backdrop-filter: blur(12px);
+  box-shadow: none;
 }
 
 @utility gallery-lift {
   transition:
-    transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
-    border-color 180ms ease,
-    box-shadow 180ms ease;
+    transform 600ms ease,
+    border-color 900ms ease,
+    background-color 900ms ease;
 
   @media (hover: hover) {
     &:hover {
-      transform: translateY(-3px);
-      border-color: color-mix(in srgb, var(--primary) 32%, transparent);
-      box-shadow: 0 14px 34px oklch(0.46 0.07 45 / 0.11);
+      border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+      background-color: color-mix(in srgb, var(--card) 70%, var(--background));
     }
   }
 
@@ -96,17 +95,15 @@
 }
 
 @utility gallery-enter {
-  animation: gallery-rise 420ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation: gallery-rise 1.4s ease-out both;
 }
 
 @keyframes gallery-rise {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.985);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }
 

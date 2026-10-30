@@ -10,7 +10,8 @@ Live site: <https://meow-wall.vercel.app>
 
 ## What is inside
 
-- **Cat Wall** (`/`): a random featured cat, four special guests, and the full cat archive
+- **Humble Critters** (`/`, default tab): five hand-drawn ink-on-paper icons — rabbit, chick, bear, puppy, cat
+- **Cat Wall** (`/wall`): a random featured cat, four special guests, and the full cat archive
 - **Studio** (`/studio`): customize colors, combine 16 accessories, choose from 10 expressions, save locally, edit or duplicate your cats, and export SVG
 - **Cat Says** (`/says`): give a cat a speech bubble, download a square PNG card, or open the native share sheet
 - **Saved Cats** (`/favorites`): browser-local favorites
@@ -19,6 +20,10 @@ Live site: <https://meow-wall.vercel.app>
 - **English / 中文**: English by default, with a persistent language switch
 
 Custom cats and language preferences stay in the browser through `localStorage`.
+
+The whole site uses a quiet paper look: warm off-white paper with a faint grain, muted ink, hairlines, serif headings, no shadows, and only slow fades.
+
+Humble Critters originals live in `art/humble-animals/*.png`; run `node scripts/optimize-humble-animals.mjs` to regenerate the 640px WebP files in `public/humble-animals/`.
 
 ## Tech stack
 
@@ -69,7 +74,8 @@ env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx v
 
 ### 有什么
 
-- **猫墙**（`/`）：随机今日猫猫、四只特别来宾和完整猫猫档案
+- **朴实小动物**（`/`，默认首页）：五张手绘纸上墨线图标——小兔、小鸡、小熊、小狗、小猫
+- **猫墙**（`/wall`）：随机今日猫猫、四只特别来宾和完整猫猫档案
 - **捏猫**（`/studio`）：调色、组合 16 种配饰、切换 10 种表情、保存、编辑或复制猫猫，并导出 SVG
 - **猫猫说话**（`/says`）：让猫猫头顶冒泡，下载方形 PNG 分享卡，或打开系统分享面板
 - **收藏**（`/favorites`）：保存在浏览器本地
@@ -78,6 +84,10 @@ env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx v
 - **English / 中文**：默认英文，可随时切换并记住选择
 
 自定义猫猫和语言偏好都只保存在浏览器的 `localStorage` 中。
+
+全站采用安静的纸张风格：暖白纸面加淡淡纸纹、低对比墨色、细线、衬线标题、没有阴影，只有缓慢的淡入。
+
+朴实小动物的原图放在 `art/humble-animals/*.png`，运行 `node scripts/optimize-humble-animals.mjs` 会重新生成 `public/humble-animals/` 下 640px 的 WebP。
 
 ### 技术栈
 

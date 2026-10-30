@@ -72,7 +72,7 @@ export default function FavoritesPage() {
           <p className="font-heading text-xl font-semibold">{copy.favorites.empty}</p>
           <p className="text-muted-foreground text-sm">{copy.favorites.emptyHint}</p>
           <div className="flex gap-3">
-            <Button render={<Link href="/" />} nativeButton={false}>
+            <Button render={<Link href="/wall" />} nativeButton={false}>
               {copy.favorites.goWall}
             </Button>
             <Button

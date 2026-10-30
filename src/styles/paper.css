@@ -1,0 +1,189 @@
+/*
+ * 纸张风格（全站）：暖白纸面 + 细微纸纹、低对比墨色、大量留白、细线、
+ * 轻而安静的字体、没有阴影，只有缓慢的淡入。
+ * 下半部分的 .paper-* 是首页「朴实小动物」专用的排版。
+ */
+
+:root {
+  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.42  0 0 0 0 0.37  0 0 0 0 0.3  0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --paper-serif: var(--font-serif), "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC",
+    "STSong", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+  --paper-ink: var(--foreground);
+  --paper-ink-soft: var(--muted-foreground);
+  --paper-line: var(--border);
+}
+
+@layer base {
+  body {
+    font-weight: 350;
+    letter-spacing: 0.01em;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--paper-serif);
+  }
+}
+
+/* 标题统一换成安静的衬线体，并压低字重 */
+.font-heading {
+  font-family: var(--paper-serif) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* 粗字一律放轻 */
+.font-bold,
+.font-extrabold,
+.font-black {
+  font-weight: 500 !important;
+}
+
+.font-semibold {
+  font-weight: 450 !important;
+}
+
+.paper-page {
+  margin-inline: auto;
+  max-width: 1080px;
+  padding-block: 4.5rem 3rem;
+  font-family: var(--paper-serif);
+  color: var(--paper-ink);
+
+  @media (min-width: 768px) {
+    padding-block: 7rem 5rem;
+  }
+}
+
+.paper-header {
+  max-width: 34rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.paper-eyebrow {
+  color: var(--paper-ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+}
+
+.paper-title {
+  margin-top: 1.4rem;
+  font-size: clamp(1.75rem, 3.4vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--paper-ink);
+}
+
+.paper-subtitle {
+  margin-top: 1.4rem;
+  color: var(--paper-ink-soft);
+  font-size: 0.9rem;
+  line-height: 2;
+  letter-spacing: 0.04em;
+}
+
+.paper-header::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 1px;
+  margin: 3rem auto 0;
+  background: var(--paper-line);
+}
+
+.paper-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem 1.5rem;
+  margin-top: 4rem;
+  list-style: none;
+  padding: 0;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4rem 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2.5rem;
+    margin-top: 5.5rem;
+  }
+}
+
+.paper-sheet figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.paper-art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  /* 让图片融进纸面：去掉过白的底，墨色更淡一点 */
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+  filter: saturate(0.85) contrast(0.92);
+  transition: opacity 1.2s ease;
+}
+
+@media (hover: hover) {
+  .paper-sheet:hover .paper-art {
+    opacity: 1;
+  }
+}
+
+.paper-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--paper-line);
+  min-width: 4.5rem;
+  justify-content: center;
+  color: var(--paper-ink-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+}
+
+.paper-index {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.paper-colophon {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 6rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--paper-line);
+  color: var(--paper-ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+}
+
+.paper-fade {
+  animation: paper-fade-in 1.6s ease-out both;
+}
+
+@keyframes paper-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-fade {
+    animation: none;
+  }
+}

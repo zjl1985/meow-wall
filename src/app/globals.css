@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "../styles/gallery.css";
 @import "../styles/themes.css";
+@import "../styles/paper.css";
 
 @custom-variant dark (&:where([data-theme="rose-pine"], [data-theme="rose-pine-moon"]) *);
 
@@ -11,7 +12,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --font-heading: var(--font-display);
+  --font-heading: var(--font-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -52,47 +53,47 @@
 
 :root {
   color-scheme: light;
-  --gallery-top: oklch(0.99 0.012 86);
-  --gallery-bottom: oklch(0.965 0.025 87);
-  --gallery-warm: oklch(0.91 0.08 30 / 0.58);
-  --gallery-cool: oklch(0.91 0.07 158 / 0.48);
-  --gallery-label: oklch(0.62 0.11 38);
-  --stage-top: oklch(0.96 0.04 88);
-  --stage-bottom: oklch(0.93 0.045 72);
-  --stage-glow: oklch(0.99 0.01 88);
-  /* 奶油玩具箱：明亮，但保留足够的文字与控件对比度 */
-  --background: oklch(0.975 0.018 87);
-  --foreground: oklch(0.29 0.035 32);
-  --card: oklch(0.995 0.008 85);
-  --card-foreground: oklch(0.29 0.035 32);
-  --popover: oklch(0.995 0.008 85);
-  --popover-foreground: oklch(0.29 0.035 32);
-  --primary: oklch(0.72 0.16 37);
-  --primary-foreground: oklch(0.99 0.006 80);
-  --secondary: oklch(0.93 0.055 88);
-  --secondary-foreground: oklch(0.34 0.045 42);
-  --muted: oklch(0.945 0.025 84);
-  --muted-foreground: oklch(0.53 0.035 45);
-  --accent: oklch(0.91 0.06 158);
-  --accent-foreground: oklch(0.3 0.05 155);
-  --destructive: oklch(0.68 0.18 25);
-  --border: oklch(0.5 0.045 45 / 16%);
-  --input: oklch(0.5 0.045 45 / 18%);
-  --ring: oklch(0.72 0.16 37);
-  --chart-1: oklch(0.72 0.16 37);
-  --chart-2: oklch(0.76 0.1 157);
-  --chart-3: oklch(0.83 0.12 88);
-  --chart-4: oklch(0.7 0.09 300);
-  --chart-5: oklch(0.7 0.1 225);
-  --radius: 0.85rem;
-  --sidebar: oklch(0.99 0.01 85);
-  --sidebar-foreground: oklch(0.29 0.035 32);
-  --sidebar-primary: oklch(0.72 0.16 37);
-  --sidebar-primary-foreground: oklch(0.99 0.006 80);
-  --sidebar-accent: oklch(0.93 0.055 88);
-  --sidebar-accent-foreground: oklch(0.34 0.045 42);
-  --sidebar-border: oklch(0.5 0.045 45 / 16%);
-  --sidebar-ring: oklch(0.72 0.16 37);
+  /* 纸：暖白纸面、低对比墨色、细线，没有响亮的颜色 */
+  --gallery-top: #f7f3ea;
+  --gallery-bottom: #f2ece0;
+  --gallery-warm: rgb(232 222 204 / 0.35);
+  --gallery-cool: rgb(226 224 214 / 0.3);
+  --gallery-label: #9a8f7f;
+  --stage-top: #f6f1e7;
+  --stage-bottom: #f1eadd;
+  --stage-glow: #fbf8f2;
+  --background: #f6f1e7;
+  --foreground: #5f584e;
+  --card: #f9f5ed;
+  --card-foreground: #5f584e;
+  --popover: #faf7f0;
+  --popover-foreground: #5f584e;
+  --primary: #8a7f70;
+  --primary-foreground: #faf7f0;
+  --secondary: #eee7da;
+  --secondary-foreground: #5f584e;
+  --muted: #efe9dd;
+  --muted-foreground: #9d9486;
+  --accent: #ebe5d8;
+  --accent-foreground: #5f584e;
+  --destructive: #b07a6e;
+  --border: rgb(95 88 78 / 0.14);
+  --input: rgb(95 88 78 / 0.18);
+  --ring: #b6ab9b;
+  --chart-1: #8a7f70;
+  --chart-2: #a3a08f;
+  --chart-3: #c2b49a;
+  --chart-4: #a8979f;
+  --chart-5: #8f9aa0;
+  --radius: 0.5rem;
+  --sidebar: #f9f5ed;
+  --sidebar-foreground: #5f584e;
+  --sidebar-primary: #8a7f70;
+  --sidebar-primary-foreground: #faf7f0;
+  --sidebar-accent: #eee7da;
+  --sidebar-accent-foreground: #5f584e;
+  --sidebar-border: rgb(95 88 78 / 0.14);
+  --sidebar-ring: #b6ab9b;
 }
 
 @layer base {

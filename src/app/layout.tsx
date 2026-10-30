@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Syne } from "next/font/google";
+import { DM_Sans, EB_Garamond } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { AwayTitle } from "@/components/away-title";
@@ -14,8 +14,8 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
 });
 
-const syne = Syne({
-  variable: "--font-display",
+const garamond = EB_Garamond({
+  variable: "--font-serif",
   subsets: ["latin"],
 });
 
@@ -51,7 +51,7 @@ export default function RootLayout({
       suppressHydrationWarning
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${dmSans.variable} ${syne.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${garamond.variable} h-full antialiased`}
     >
       <body className="mobile-safe-bottom flex min-h-full flex-col md:pb-0">
         <ThemeProvider>

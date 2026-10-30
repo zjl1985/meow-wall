@@ -385,7 +385,7 @@ export default function StudioPage() {
             </Button>
             <Button
               variant="ghost"
-              render={<Link href="/" />}
+              render={<Link href="/wall" />}
               nativeButton={false}
               className="col-span-2 w-full sm:w-auto"
             >

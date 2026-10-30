@@ -2,7 +2,7 @@
 
 import { ThemePicker } from "@/components/theme-picker";
 import Link from "next/link";
-import { Cat, Heart, Languages, MessageCircle, Palette } from "lucide-react";
+import { Cat, Feather, Heart, Languages, MessageCircle, Palette } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
@@ -18,7 +18,8 @@ export function SiteNav() {
   const copy = useCopy();
   const locale = useLocale();
   const links = [
-    { href: "/", label: copy.nav.wall, icon: Cat },
+    { href: "/", label: copy.nav.humble, icon: Feather },
+    { href: "/wall", label: copy.nav.wall, icon: Cat },
     { href: "/studio", label: copy.nav.studio, icon: Palette },
     { href: "/says", label: copy.nav.says, icon: MessageCircle },
     { href: "/favorites", label: copy.nav.favorites, icon: Heart },
@@ -123,7 +124,7 @@ export function SiteNav() {
 
       <nav
         aria-label={copy.nav.mobile}
-        className="section-rule fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 grid grid-cols-4 rounded-[1.35rem] border bg-card/90 p-1.5 shadow-[0_12px_36px_oklch(0.35_0.04_35_/_0.16)] backdrop-blur-xl md:hidden"
+        className="section-rule fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 grid grid-cols-5 rounded-[1.35rem] border bg-card/90 p-1.5 backdrop-blur-xl md:hidden"
       >
         {links.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
