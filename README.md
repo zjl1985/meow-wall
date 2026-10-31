@@ -74,7 +74,7 @@ env -u ALL_PROXY -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy npx v
 
 ### 有什么
 
-- **朴实小动物**（`/`，默认首页）：五张手绘纸上墨线图标——小兔、小鸡、小熊、小狗、小猫
+- **淡淡动物园**（`/`，默认首页）：14 种纸上墨线小动物，保留原有五张插画，并从 agent-hub 补入大象、毛毛虫、孔雀、考拉、小猪、青蛙、猴子、河马和长颈鹿
 - **猫墙**（`/wall`）：随机今日猫猫、四只特别来宾和完整猫猫档案
 - **捏猫**（`/studio`）：调色、组合 16 种配饰、切换 10 种表情、保存、编辑或复制猫猫，并导出 SVG
 - **猫猫说话**（`/says`）：让猫猫头顶冒泡，下载方形 PNG 分享卡，或打开系统分享面板
@@ -117,3 +117,5 @@ pnpm test:e2e:smoke
 ### 许可证
 
 [MIT](./LICENSE)
+
+淡淡动物园新增的 9 张 SVG 来自 `agent-hub/public/brand/animals/*-soft.svg`，保留柔和纸底、炭笔纹理和透明外圈，存放在 `public/humble-animals/`。原有 PNG → WebP 脚本只处理最初五张插画。

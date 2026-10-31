@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-test("home opens on the Humble Critters series", async ({ page }) => {
+test("home opens on the Quiet Zoo series", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Humble Critters" })).toBeVisible();
-  for (const name of ["Rabbit", "Chick", "Bear", "Puppy", "Cat"]) {
+  await expect(page.getByRole("heading", { name: "Quiet Zoo" })).toBeVisible();
+  for (const name of ["Rabbit", "Chick", "Bear", "Puppy", "Cat", "Elephant", "Caterpillar", "Peacock", "Koala", "Pig", "Frog", "Monkey", "Hippo", "Giraffe"]) {
     await expect(page.getByRole("img", { name, exact: true })).toBeVisible();
   }
   await page.getByRole("button", { name: "切换到中文" }).click();
-  await expect(page.getByRole("heading", { name: "朴实小动物" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "淡淡动物园" })).toBeVisible();
 });
 
 test("wall tab shows the cat gallery in English", async ({ page }) => {
